@@ -17,6 +17,7 @@ develop-eggs
 .installed.cfg
 lib
 lib64
+doc/_build
 
 # Installer logs
 pip-log.txt
@@ -33,3 +34,16 @@ nosetests.xml
 .mr.developer.cfg
 .project
 .pydevproject
+.project
+.pydevproject
+.settings/
+.idea/
+*.sublime-*
+.codeintel/
+/reports
+/venv
+
+# Misc
+*.*~
+*.db
+*.sqlite

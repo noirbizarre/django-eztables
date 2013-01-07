@@ -1,0 +1,25 @@
+{% extends "eztables/base.html" %}
+
+{% block container %}
+<div class="hero-unit">
+    <h1>Django ezTables Demo</h1>
+    <p>Explore Django ezTables usage through these simple demo pages</p>
+    <p>
+        <a class="btn btn-primary btn-large" href="{% url client-side %}">
+            Client-side
+        </a>
+        <a class="btn btn-primary btn-large" href="{% url server-side %}">
+            Server-side
+        </a>
+        <a class="btn btn-primary btn-large" href="{% url deferred-loading %}">
+            Deferred loading
+        </a>
+        <a class="btn btn-primary btn-large" href="{% url localization %}">
+            Localization
+        </a>
+        <a class="btn btn-primary btn-large" href="{% url bootstrap %}">
+            Boostrap integration
+        </a>
+    </p>
+</div>
+{% endblock %}

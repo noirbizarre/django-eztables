@@ -10,7 +10,7 @@ jQuery Datatables integration for Django.
 Compatibility
 =============
 
-Django ezTables requires Python 2.7 and Django 1.4.
+Django ezTables requires Python 2.7, Django 1.4 and Django.js 0.5.
 
 
 Installation
@@ -30,6 +30,29 @@ or with easy_install:
 
 
 Add ``django-eztables`` to your ``settings.INSTALLED_APPS``.
+
+
+Features
+========
+
+- Datatables.net, plugins and localization integration with Django.
+- Server-side processing with a simple view.
+- Deferred loading support.
+- Twitter Bootstrap integration.
+
+
+Demo
+====
+
+You can try the demo by cloning this repository and doing:
+
+.. code-block:: bash
+
+    $ python manage.py syncdb
+    $ python manage.py loaddata eztables/demo/fixtures/browsers.json
+    $ pyhton manage.py runserver
+
+Then open your browser to http://localhost:8000
 
 
 Documentation

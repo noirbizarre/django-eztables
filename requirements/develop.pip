@@ -1,0 +1,5 @@
+-r install.pip
+pep8
+pylint
+coverage
+factory_boy

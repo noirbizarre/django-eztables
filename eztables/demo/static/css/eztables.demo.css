@@ -1,0 +1,26 @@
+html {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+}
+
+body {
+    margin: 0;
+    padding: 0;
+    padding-top: 50px;
+}
+
+.navbar .brand {
+    margin-left: 0;
+}
+
+#footer {
+    height: 20px;
+    text-align: center;
+    font-weight: bold;
+}
+
+#footer p {
+    margin: 0;
+}

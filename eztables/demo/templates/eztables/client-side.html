@@ -1,0 +1,38 @@
+{% extends "eztables/base.html" %}
+{% load js %}
+
+{% block container %}
+<div class="page-header">
+    <h1>Client-side processing</h1>
+</div>
+
+<div class="row">
+    <table id="browser-table" class="span12 display table table-bordered">
+        <thead>
+            <tr>
+                <th>Rendering Engine</th>
+                <th>Browser</th>
+                <th>Platform(s)</th>
+                <th>Engine version</th>
+                <th>CSS Grade</th>
+            </tr>
+        </thead>
+        <tbody>
+        {% for browser in browsers %}
+        <tr class="grade{{ browser.engine.css_grade }}">
+            <td>{{ browser.engine.name }}</td>
+            <td>{{ browser.name }} {{ browser.version }}</td>
+            <td>{{ browser.platform }}</td>
+            <td class="center">{{ browser.engine.version|default:"-" }}</td>
+            <td class="center">{{ browser.engine.css_grade }}</td>
+        </tr>
+        {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+{% block extra_script %}
+    {% js "js/eztables.client.js" %}
+{% endblock %}

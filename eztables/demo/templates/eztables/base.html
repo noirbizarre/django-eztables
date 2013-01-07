@@ -1,0 +1,80 @@
+{% load js staticfiles %}
+<!doctype html>
+<!--[if lt IE 7]> <html class="no-js lt-ie9 lt-ie8 lt-ie7" lang="en"> <![endif]-->
+<!--[if IE 7]>    <html class="no-js lt-ie9 lt-ie8" lang="en"> <![endif]-->
+<!--[if IE 8]>    <html class="no-js lt-ie9" lang="en"> <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en"> <!--<![endif]-->
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+    <title>
+        {% block title %}Django EZTables Demo{% endblock %}
+    </title>
+    <meta name="description" content="Django EZTables Demo">
+    <meta name="author" content="Axel Haustant">
+
+    {% css "css/bootstrap.min.css" %}
+    {% css "css/datatables.demo.css" %}
+    {% css "css/datatables.bootstrap.css" %}
+    {% css "css/eztables.demo.css" %}
+
+    {% block extra_style %}{% endblock %}
+
+    {% js_lib "modernizr-2.5.3-respond-1.1.0.min.js" %}
+</head>
+
+<body>
+<!--[if lt IE 7]><p class=chromeframe>Your browser is <em>ancient!</em> <a href="http://browsehappy.com/">Upgrade to a different browser</a> or <a href="http://www.google.com/chromeframe/?redirect=true">install Google Chrome Frame</a> to experience this site.</p><![endif]-->
+
+    <header class="navbar navbar-fixed-top">
+        <div class="navbar-inner">
+            <a class="brand" href="{% url index %}" title="EZTables Demo">
+                EZTables Demo
+            </a>
+
+            <ul class="nav">
+                <li>
+                    <a href="{% url client-side %}">
+                        Client-side
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url server-side %}">
+                        Server-side
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url deferred-loading %}">
+                        Deferred loading
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url localization %}">
+                        Localization
+                    </a>
+                </li>
+                <li>
+                    <a href="{% url bootstrap %}">
+                        Bootstrap integration
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </header>
+
+    <div id="main-container" class="container">
+    {% block container %}{% endblock %}
+    </div> <!-- /container -->
+
+    <footer id="footer" class="container-fluid">
+      <p>&copy; <a href="http://noirbizarre.info"/>noirbizarre.info</a> 2012</p>
+    </footer>
+
+    {% django_js %}
+    {% js_lib "bootstrap.min.js" %}
+    {% js_lib "jquery.dataTables.min.js" %}
+    {% js_lib "datatables/datatables.bootstrap.js" %}
+    {% block extra_script %}{% endblock %}
+</body>
+</html>
