@@ -7,7 +7,7 @@ from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic import View
 from django.views.generic.list import MultipleObjectMixin
 
-from eztables.forms import DatatablesForm, ASC, DESC
+from eztables.forms import DatatablesForm, DESC
 
 
 JSON_MIMETYPE = 'application/json'
@@ -15,28 +15,21 @@ JSON_MIMETYPE = 'application/json'
 
 class RowAdapter(object):
     '''
-    Base row adapter class
+    Default base row adapter class
 
     Row adapter allow custom row processing before serialization.
+    This default one simple get all fields.
     '''
-    def __init__(self, rows):
-        self.rows = rows
-
-    def get_rows(self):
-        return [self.get_row(row) for row in self.rows]
+    def get_rows(self, rows):
+        return [self.get_row(row) for row in rows]
 
     def get_row(self, row):
-        raise NotImplemented
-
-
-class DefaultRowAdapter(RowAdapter):
-    '''
-    The default row adapter.
-
-    Simply get all the fields.
-    '''
-    def get_row(self, row):
+        '''Get the displayed rows from the QuerySet ones'''
         return list(row)
+
+    def get_orders(self, indexes, directions):
+        '''Get the QuerySet fields indexes and directions from the displayed ones'''
+        return indexes, directions
 
 
 class DatatablesView(MultipleObjectMixin, View):
@@ -46,7 +39,7 @@ class DatatablesView(MultipleObjectMixin, View):
     See: http://www.datatables.net/usage/server-side
     '''
     fields = []
-    adapter_class = DefaultRowAdapter
+    adapter_class = RowAdapter
 
     def post(self, request, *args, **kwargs):
         return self.process_response(request.POST)
@@ -56,6 +49,7 @@ class DatatablesView(MultipleObjectMixin, View):
 
     def process_response(self, data):
         self.form = DatatablesForm(data)
+        self.adapter = self.adapter_class()
         if self.form.is_valid():
             self.object_list = self.get_queryset().values_list(*self.fields)
             return self.render_to_response(self.form)
@@ -67,7 +61,10 @@ class DatatablesView(MultipleObjectMixin, View):
         iSortingCols = self.form.cleaned_data['iSortingCols']
         orders_idx = [self.form.cleaned_data['iSortCol_%s' % i] for i in xrange(iSortingCols)]
         orders_dirs = [self.form.cleaned_data['sSortDir_%s' % i] for i in xrange(iSortingCols)]
-        orders = map(lambda i, d: '%s%s' % ('-' if d == DESC else '', self.fields[i]), orders_idx, orders_dirs)
+        orders = map(
+            lambda i, d: '%s%s' % ('-' if d == DESC else '', self.fields[i]),
+            *self.adapter.get_orders(orders_idx, orders_dirs)
+        )
         return qs.order_by(*orders)
 
     def get_page(self, form):
@@ -83,7 +80,7 @@ class DatatablesView(MultipleObjectMixin, View):
             'iTotalRecords': page.paginator.count,
             'iTotalDisplayRecords': page.paginator.count,
             'sEcho': form.cleaned_data['sEcho'],
-            'aaData': self.adapter_class(page.object_list).get_rows(),
+            'aaData': self.adapter.get_rows(page.object_list),
         }
         return self.json_response(data)
 

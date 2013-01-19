@@ -15,6 +15,14 @@ class BrowserAdapter(RowAdapter):
             return row
         return (row[0], '%s %s' % row[1:3], row[3], row[4] or '-', row[5])
 
+    def get_orders(self, indexes, directions):
+        indexes = [idx + 1 if idx >= 2 else idx for idx in indexes]
+        if 1 in indexes:
+            idx = indexes.index(1) + 1
+            indexes.insert(idx,  2)
+            directions.insert(idx, directions[idx - 1])
+        return indexes, directions
+
 
 class ClientSideView(ListView):
     template_name = 'eztables/client-side.html'

@@ -307,7 +307,7 @@ class DatatablesTestMixin(object):
             self.assertEqual(row[1], 'Browser %s' % (4 - idx))
 
     def test_sorted_multiple_field(self):
-        '''Should handle sorting on a single field'''
+        '''Should handle sorting on multiple field'''
         for i in xrange(10):
             BrowserFactory(name='Browser %s' % (i / 2), engine__version='%s' % i)
 
@@ -344,6 +344,64 @@ class DatatablesTestMixin(object):
             expected_name, expected_version = expected[idx]
             self.assertEqual(row[1], expected_name)
             self.assertEqual(row[3], expected_version)
+
+    def test_sorted_adapted(self):
+        '''Should handle sorting with adapter'''
+        for i in xrange(5):
+            BrowserFactory(name='Browser', version='%s' % i)
+
+        response = self.get_response('adapted-browsers', {
+            'sEcho': '1',
+            'iColumns': '5',
+            'iDisplayStart': '0',
+            'iDisplayLength': '10',
+            'sSearch': '',
+            'bRegex': 'false',
+            'iSortingCols': '1',
+            'iSortCol_0': '1',
+            'sSortDir_0': 'desc',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+        data = json.loads(response.content)
+        for idx, row in enumerate(data['aaData']):
+            self.assertEqual(row[1], 'Browser %s' % (4 - idx))
+
+    def test_sorted_adapted_field_with_split(self):
+        '''Should handle sorting with adapter and splitted field'''
+        for i in xrange(10):
+            BrowserFactory(name='Browser %s' % (i / 2), version='%s' % i)
+
+        response = self.get_response('adapted-browsers', {
+            'sEcho': '1',
+            'iColumns': '5',
+            'iDisplayStart': '0',
+            'iDisplayLength': '10',
+            'sSearch': '',
+            'bRegex': 'false',
+            'iSortingCols': '1',
+            'iSortCol_0': '1',
+            'sSortDir_0': 'desc',
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+        data = json.loads(response.content)
+        expected = (
+            'Browser 4 9',
+            'Browser 4 8',
+            'Browser 3 7',
+            'Browser 3 6',
+            'Browser 2 5',
+            'Browser 2 4',
+            'Browser 1 3',
+            'Browser 1 2',
+            'Browser 0 1',
+            'Browser 0 0',
+        )
+        for idx, row in enumerate(data['aaData']):
+            self.assertEqual(row[1], expected[idx])
 
 
 class DatatablesGetTest(DatatablesTestMixin, TestCase):
