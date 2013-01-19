@@ -10,8 +10,9 @@ from django.test import TestCase
 from factory import Factory, SubFactory, Sequence
 
 from eztables.forms import DatatablesForm
+from eztables.views import RE_FORMATTED
 from eztables.demo.models import Browser, Engine
-from eztables.demo.views import BrowserDatatablesView, AdaptedBrowserDatatablesView
+from eztables.demo.views import BrowserDatatablesView, FormattedBrowserDatatablesView
 
 
 class EngineFactory(Factory):
@@ -158,10 +159,36 @@ class DatatablesFormTest(unittest.TestCase):
         self.assertFalse(form.is_valid())
 
 
+class FormattedFieldRegexTest(unittest.TestCase):
+    def test_not_formatted(self):
+        '''Should not match unformatted field descriptions'''
+        self.assertIsNone(RE_FORMATTED.match('my_field'))
+
+    def test_formatted_single_token(self):
+        '''Should match a formatted field description with a single token'''
+        matches = RE_FORMATTED.findall('{field}')
+        self.assertEqual(len(matches), 1)
+        self.assertEqual(matches[0], 'field')
+
+    def test_formatted_multi_token(self):
+        '''Should match a formatted field description with a single token'''
+        matches = RE_FORMATTED.findall('{field_0}-{field_1}: {field_2}')
+        self.assertEqual(len(matches), 3)
+        for i in xrange(3):
+            self.assertEqual(matches[i], 'field_%s' % i)
+
+    def test_formatted_nester_token(self):
+        '''Should match a formatted field description with a single token'''
+        matches = RE_FORMATTED.findall('{nested__field_0}-{nested__field_1}: {nested__field_2}')
+        self.assertEqual(len(matches), 3)
+        for i in xrange(3):
+            self.assertEqual(matches[i], 'nested__field_%s' % i)
+
+
 class DatatablesTestMixin(object):
     urls = patterns('',
         url(r'^$', BrowserDatatablesView.as_view(), name='browsers'),
-        url(r'^adapted/$', AdaptedBrowserDatatablesView.as_view(), name='adapted-browsers'),
+        url(r'^formatted/$', FormattedBrowserDatatablesView.as_view(), name='formatted-browsers'),
     )
 
     def get_response(self, name, data={}):
@@ -253,11 +280,11 @@ class DatatablesTestMixin(object):
         for row in data['aaData']:
             self.assertEqual(len(row), 5)
 
-    def test_adapted(self):
-        '''Should return an adapted Datatables JSON response'''
+    def test_formatted(self):
+        '''Should return an formatted Datatables JSON response'''
         browsers = [BrowserFactory() for _ in xrange(15)]
 
-        response = self.get_response('adapted-browsers', {
+        response = self.get_response('formatted-browsers', {
             'sEcho': '1',
             'iColumns': '5',
             'iDisplayStart': '0',
@@ -345,35 +372,12 @@ class DatatablesTestMixin(object):
             self.assertEqual(row[1], expected_name)
             self.assertEqual(row[3], expected_version)
 
-    def test_sorted_adapted(self):
-        '''Should handle sorting with adapter'''
-        for i in xrange(5):
-            BrowserFactory(name='Browser', version='%s' % i)
-
-        response = self.get_response('adapted-browsers', {
-            'sEcho': '1',
-            'iColumns': '5',
-            'iDisplayStart': '0',
-            'iDisplayLength': '10',
-            'sSearch': '',
-            'bRegex': 'false',
-            'iSortingCols': '1',
-            'iSortCol_0': '1',
-            'sSortDir_0': 'desc',
-        })
-        self.assertEqual(response.status_code, 200)
-        self.assertEqual(response['Content-Type'], 'application/json')
-
-        data = json.loads(response.content)
-        for idx, row in enumerate(data['aaData']):
-            self.assertEqual(row[1], 'Browser %s' % (4 - idx))
-
-    def test_sorted_adapted_field_with_split(self):
-        '''Should handle sorting with adapter and splitted field'''
+    def test_sorted_formatted(self):
+        '''Should handle sorting with formatting'''
         for i in xrange(10):
             BrowserFactory(name='Browser %s' % (i / 2), version='%s' % i)
 
-        response = self.get_response('adapted-browsers', {
+        response = self.get_response('formatted-browsers', {
             'sEcho': '1',
             'iColumns': '5',
             'iDisplayStart': '0',

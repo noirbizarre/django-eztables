@@ -1,27 +1,12 @@
 # -*- coding: utf-8 -*-
 from django.views.generic import TemplateView, ListView
 
-from eztables.views import DatatablesView, RowAdapter
+from eztables.views import DatatablesView
 from eztables.demo.models import Browser
 
 
 class IndexView(TemplateView):
     template_name = 'eztables/index.html'
-
-
-class BrowserAdapter(RowAdapter):
-    def get_row(self, row):
-        if not len(row):
-            return row
-        return (row[0], '%s %s' % row[1:3], row[3], row[4] or '-', row[5])
-
-    def get_orders(self, indexes, directions):
-        indexes = [idx + 1 if idx >= 2 else idx for idx in indexes]
-        if 1 in indexes:
-            idx = indexes.index(1) + 1
-            indexes.insert(idx,  2)
-            directions.insert(idx, directions[idx - 1])
-        return indexes, directions
 
 
 class ClientSideView(ListView):
@@ -57,14 +42,12 @@ class BrowserDatatablesView(DatatablesView):
     )
 
 
-class AdaptedBrowserDatatablesView(DatatablesView):
+class FormattedBrowserDatatablesView(DatatablesView):
     model = Browser
     fields = (
         'engine__name',
-        'name',
-        'version',
+        '{name} {version}',
         'platform',
         'engine__version',
         'engine__css_grade',
     )
-    adapter_class = BrowserAdapter

@@ -7,7 +7,7 @@ from eztables.demo.views import (
     DeferredLoadingView,
     LocalizationView,
     BootstrapView,
-    AdaptedBrowserDatatablesView,
+    FormattedBrowserDatatablesView,
 )
 
 # Uncomment the next two lines to enable the admin:
@@ -23,7 +23,7 @@ urlpatterns = patterns('',
     url(r'^defered-loading$', DeferredLoadingView.as_view(), name='deferred-loading'),
     url(r'^boostrap$', BootstrapView.as_view(), name='bootstrap'),
     url(r'^localization$', LocalizationView.as_view(), name='localization'),
-    url(r'^datatables$', AdaptedBrowserDatatablesView.as_view(), name='browsers-datatables'),
+    url(r'^datatables$', FormattedBrowserDatatablesView.as_view(), name='browsers-datatables'),
     url(r'^js/', include('djangojs.urls')),
 
     # Uncomment the admin/doc line below to enable admin documentation:

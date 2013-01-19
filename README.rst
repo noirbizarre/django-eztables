@@ -36,7 +36,10 @@ Features
 ========
 
 - Datatables.net, plugins and localization integration with Django.
-- Server-side processing with a simple view.
+- Server-side processing with a simple view supporting:
+    - sorting
+    - searching
+    - formatting using format pattern
 - Deferred loading support.
 - Twitter Bootstrap integration.
 
