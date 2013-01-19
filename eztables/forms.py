@@ -26,8 +26,8 @@ class DatatablesForm(forms.Form):
             self.fields['bSearchable_%s' % idx] = forms.BooleanField(required=False)
 
         for idx in xrange(int(self.data['iSortingCols'])):
-            self.fields['iSortCol_%s' % idx] = forms.IntegerField(required=False)
-            self.fields['sSortDir_%s' % idx] = forms.ChoiceField(required=False, choices=SORT_DIRS)
+            self.fields['iSortCol_%s' % idx] = forms.IntegerField(required=True)
+            self.fields['sSortDir_%s' % idx] = forms.ChoiceField(required=True, choices=SORT_DIRS)
 
     #: Display start point in the current data set.
     iDisplayStart = forms.IntegerField()
