@@ -1,12 +1,15 @@
 # -*- coding: utf-8 -*-
 import json
 import random
+import unittest
 
+from django import forms
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from factory import Factory, SubFactory, Sequence
 
+from eztables.forms import DatatablesForm
 from eztables.demo.models import Browser, Engine
 from eztables.demo.views import BrowserDatatablesView, AdaptedBrowserDatatablesView
 
@@ -26,6 +29,112 @@ class BrowserFactory(Factory):
     engine = SubFactory(EngineFactory)
 
 
+class DatatablesFormTest(unittest.TestCase):
+    def test_base_parameters(self):
+        '''Should validate base parameters'''
+        form = DatatablesForm({
+            'sEcho': '1',
+            'iColumns': '5',
+            'iDisplayStart': '0',
+            'iDisplayLength': '10',
+            'sSearch': '',
+            'bRegex': 'false',
+            'iSortingCols': '1',
+        })
+        self.assertTrue(form.is_valid())
+        self.assertEqual(form.cleaned_data['sEcho'], '1')
+        self.assertEqual(form.cleaned_data['iColumns'], 5)
+        self.assertEqual(form.cleaned_data['iDisplayStart'], 0)
+        self.assertEqual(form.cleaned_data['iDisplayLength'], 10)
+        self.assertEqual(form.cleaned_data['sSearch'], '')
+        self.assertEqual(form.cleaned_data['bRegex'], False)
+        self.assertEqual(form.cleaned_data['iSortingCols'], 1)
+
+    def test_dyanmic_extra_parameters(self):
+        '''Should dynamiclly add extra parameters'''
+        form = DatatablesForm({
+            'sEcho': '1',
+            'iColumns': '5',
+            'iDisplayStart': '0',
+            'iDisplayLength': '10',
+            'sSearch': '',
+            'bRegex': 'false',
+            'iSortingCols': '2',
+        })
+
+        for i in xrange(5):
+            self.assertTrue('mDataProp_%s' % i in form.fields)
+            self.assertTrue(isinstance(form['mDataProp_%s' % i].field, forms.CharField))
+            self.assertFalse(form['mDataProp_%s' % i].field.required)
+
+            self.assertTrue('sSearch_%s' % i in form.fields)
+            self.assertTrue(isinstance(form['sSearch_%s' % i].field, forms.CharField))
+            self.assertFalse(form['sSearch_%s' % i].field.required)
+
+            self.assertTrue('bRegex_%s' % i in form.fields)
+            self.assertTrue(isinstance(form['bRegex_%s' % i].field, forms.BooleanField))
+            self.assertFalse(form['bRegex_%s' % i].field.required)
+
+            self.assertTrue('bSearchable_%s' % i in form.fields)
+            self.assertTrue(isinstance(form['bSearchable_%s' % i].field, forms.BooleanField))
+            self.assertFalse(form['bSearchable_%s' % i].field.required)
+
+            self.assertTrue('bSortable_%s' % i in form.fields)
+            self.assertTrue(isinstance(form['bSortable_%s' % i].field, forms.BooleanField))
+            self.assertFalse(form['bSortable_%s' % i].field.required)
+
+        for i in xrange(2):
+            self.assertTrue('iSortCol_%s' % i in form.fields)
+            self.assertTrue(isinstance(form['iSortCol_%s' % i].field, forms.IntegerField))
+            self.assertFalse(form['iSortCol_%s' % i].field.required)
+
+            self.assertTrue('sSortDir_%s' % i in form.fields)
+            self.assertTrue(isinstance(form['sSortDir_%s' % i].field, forms.ChoiceField))
+            self.assertFalse(form['sSortDir_%s' % i].field.required)
+
+        self.assertFalse('iSortCol_2' in form.fields)
+
+    def test_valid_extra_parameters(self):
+        '''Should validate with extra parameters'''
+        form = DatatablesForm({
+            'sEcho': '1',
+            'iColumns': '5',
+            'iDisplayStart': '0',
+            'iDisplayLength': '10',
+            'sSearch': '',
+            'bRegex': 'false',
+            'iSortingCols': '1',
+            'mDataProp_0': '0',
+            'mDataProp_1': '1',
+            'mDataProp_2': '2',
+            'mDataProp_3': '3',
+            'mDataProp_4': '4',
+            'sSearch_0': '',
+            'sSearch_1': '',
+            'sSearch_2': '',
+            'sSearch_3': '',
+            'sSearch_4': '',
+            'bRegex_0': 'false',
+            'bRegex_1': 'false',
+            'bRegex_2': 'false',
+            'bRegex_3': 'false',
+            'bRegex_4': 'false',
+            'bSearchable_0': 'true',
+            'bSearchable_1': 'true',
+            'bSearchable_2': 'true',
+            'bSearchable_3': 'true',
+            'bSearchable_4': 'true',
+            'bSortable_0': 'true',
+            'bSortable_1': 'true',
+            'bSortable_2': 'true',
+            'bSortable_3': 'true',
+            'bSortable_4': 'true',
+            'iSortCol_0': '0',
+            'sSortDir_0': 'asc',
+        })
+        self.assertTrue(form.is_valid())
+
+
 class DatatablesTestMixin(object):
     urls = patterns('',
         url(r'^$', BrowserDatatablesView.as_view(), name='browsers'),
@@ -40,7 +149,6 @@ class DatatablesTestMixin(object):
         response = self.get_response('browsers', {
             'sEcho': '1',
             'iColumns': '5',
-            'sColumns': '',
             'iDisplayStart': '0',
             'iDisplayLength': '10',
             'sSearch': '',
@@ -66,7 +174,6 @@ class DatatablesTestMixin(object):
         response = self.get_response('browsers', {
             'sEcho': '1',
             'iColumns': '5',
-            'sColumns': '',
             'iDisplayStart': '0',
             'iDisplayLength': '10',
             'sSearch': '',
@@ -94,7 +201,6 @@ class DatatablesTestMixin(object):
         response = self.get_response('browsers', {
             'sEcho': '1',
             'iColumns': '5',
-            'sColumns': '',
             'iDisplayStart': '0',
             'iDisplayLength': '10',
             'sSearch': '',
@@ -122,7 +228,6 @@ class DatatablesTestMixin(object):
         response = self.get_response('adapted-browsers', {
             'sEcho': '1',
             'iColumns': '5',
-            'sColumns': '',
             'iDisplayStart': '0',
             'iDisplayLength': '10',
             'sSearch': '',

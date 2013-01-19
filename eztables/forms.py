@@ -1,6 +1,13 @@
 # -*- coding: utf-8 -*-
 from django import forms
 
+ASC = 'asc'
+DESC = 'desc'
+SORT_DIRS = (
+    (ASC, ASC),
+    (DESC, DESC),
+)
+
 
 class DatatablesForm(forms.Form):
     '''
@@ -8,6 +15,20 @@ class DatatablesForm(forms.Form):
 
     See: http://www.datatables.net/usage/server-side
     '''
+    def __init__(self, *args, **kwargs):
+        super(DatatablesForm, self).__init__(*args, **kwargs)
+
+        for idx in xrange(int(self.data['iColumns'])):
+            self.fields['mDataProp_%s' % idx] = forms.CharField(required=False)
+            self.fields['sSearch_%s' % idx] = forms.CharField(required=False)
+            self.fields['bRegex_%s' % idx] = forms.BooleanField(required=False)
+            self.fields['bSortable_%s' % idx] = forms.BooleanField(required=False)
+            self.fields['bSearchable_%s' % idx] = forms.BooleanField(required=False)
+
+        for idx in xrange(int(self.data['iSortingCols'])):
+            self.fields['iSortCol_%s' % idx] = forms.IntegerField(required=False)
+            self.fields['sSortDir_%s' % idx] = forms.ChoiceField(required=False, choices=SORT_DIRS)
+
     #: Display start point in the current data set.
     iDisplayStart = forms.IntegerField()
 
