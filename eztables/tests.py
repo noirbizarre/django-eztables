@@ -407,6 +407,66 @@ class DatatablesTestMixin(object):
         for idx, row in enumerate(data['aaData']):
             self.assertEqual(row[1], expected[idx])
 
+    def test_global_search_single_term(self):
+        '''Should do a global search on a single term'''
+        for _ in xrange(2):
+            BrowserFactory(name='test')
+        for _ in xrange(3):
+            BrowserFactory(engine__name='engine')
+
+        query = {
+            'sEcho': '1',
+            'iColumns': '5',
+            'iDisplayStart': '0',
+            'iDisplayLength': '10',
+            'sSearch': 'test',
+            'bRegex': 'false',
+            'iSortingCols': '1',
+            'iSortCol_0': '0',
+            'sSortDir_0': 'asc',
+        }
+
+        response = self.get_response('browsers', query)
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 2)
+        for row in data['aaData']:
+            self.assertEqual(row[1], 'test')
+
+        query['sSearch'] = 'engine'
+        response = self.get_response('browsers', query)
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 3)
+        for row in data['aaData']:
+            self.assertEqual(row[0], 'engine')
+
+    def test_global_search_many_terms(self):
+        '''Should do a global search on many terms'''
+        for _ in xrange(2):
+            BrowserFactory(name='test')
+        for _ in xrange(3):
+            BrowserFactory(engine__name='engine')
+        for _ in xrange(4):
+            BrowserFactory(name='test', engine__name='engine')
+
+        query = {
+            'sEcho': '1',
+            'iColumns': '5',
+            'iDisplayStart': '0',
+            'iDisplayLength': '10',
+            'sSearch': 'test engine',
+            'bRegex': 'false',
+            'iSortingCols': '1',
+            'iSortCol_0': '0',
+            'sSortDir_0': 'asc',
+        }
+
+        response = self.get_response('browsers', query)
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 4)
+        for row in data['aaData']:
+            self.assertEqual(row[1], 'test')
+            self.assertEqual(row[0], 'engine')
+
 
 class DatatablesGetTest(DatatablesTestMixin, TestCase):
     def get_response(self, name, data={}):

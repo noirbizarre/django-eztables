@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import re
 
-from o.path import join
+from os.path import join
 from setuptools import setup, find_packages
 
 RE_REQUIREMENT = re.compile(r'^\s*-r\s*(?P<filename>.*)$')

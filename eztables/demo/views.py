@@ -11,6 +11,8 @@ class IndexView(TemplateView):
 
 class ClientSideView(ListView):
     template_name = 'eztables/client-side.html'
+    model = Browser
+    context_object_name = 'browsers'
 
 
 class ServerSideView(TemplateView):

@@ -2,8 +2,11 @@
 import json
 import re
 
-from django.core.serializers.json import DjangoJSONEncoder
+from operator import or_
+
 from django.core.paginator import Paginator
+from django.core.serializers.json import DjangoJSONEncoder
+from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.views.generic import View
 from django.views.generic.list import MultipleObjectMixin
@@ -68,6 +71,11 @@ class DatatablesView(MultipleObjectMixin, View):
     def get_queryset(self):
         '''Apply Datatables sort and search criterion to QuerySet'''
         qs = super(DatatablesView, self).get_queryset()
+        if self.form.cleaned_data['sSearch']:
+            for term in self.form.cleaned_data['sSearch'].split():
+                criterions = (Q(**{'%s__icontains' % field: term}) for field in self.get_fields())
+                search = reduce(or_, criterions)
+                qs = qs.filter(search)
         return qs.order_by(*self.get_orders())
 
     def get_page(self, form):
