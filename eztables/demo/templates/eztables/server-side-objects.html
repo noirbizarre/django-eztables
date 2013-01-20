@@ -1,0 +1,27 @@
+{% extends "eztables/server-side.html" %}
+{% load js %}
+
+{% block server-side-objects %}active{% endblock %}
+
+{% block server-side-container %}
+
+<div class="row">
+    <table id="browser-table" class="span12 display table table-bordered">
+        <thead>
+            <tr>
+                <th>Rendering Engine</th>
+                <th>Browser</th>
+                <th>Platform(s)</th>
+                <th>Engine version</th>
+                <th>CSS Grade</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+{% endblock %}
+
+{% block server-side-extra-script %}
+    {% js "js/eztables.server.objects.js" %}
+{% endblock %}

@@ -16,7 +16,15 @@ class ClientSideView(ListView):
 
 
 class ServerSideView(TemplateView):
-    template_name = 'eztables/server-side.html'
+    template_name = 'eztables/server-side-base.html'
+
+
+class ServerSideSearchView(TemplateView):
+    template_name = 'eztables/server-side-search.html'
+
+
+class ServerSideObjectsView(TemplateView):
+    template_name = 'eztables/server-side-objects.html'
 
 
 class DeferredLoadingView(TemplateView):
@@ -27,10 +35,6 @@ class DeferredLoadingView(TemplateView):
 
 class LocalizationView(TemplateView):
     template_name = 'eztables/localization.html'
-
-
-class BootstrapView(TemplateView):
-    template_name = 'eztables/bootstrap.html'
 
 
 class BrowserDatatablesView(DatatablesView):
@@ -46,6 +50,18 @@ class BrowserDatatablesView(DatatablesView):
 
 class FormattedBrowserDatatablesView(DatatablesView):
     model = Browser
+    fields = (
+        'engine__name',
+        '{name} {version}',
+        'platform',
+        'engine__version',
+        'engine__css_grade',
+    )
+
+
+class ObjectBrowserDatatablesView(DatatablesView):
+    model = Browser
+    as_object = True
     fields = (
         'engine__name',
         '{name} {version}',

@@ -1,0 +1,38 @@
+{% extends "eztables/server-side.html" %}
+{% load js %}
+
+{% block server-side-base %}active{% endblock %}
+
+{% block server-side-container %}
+
+<div class="row">
+    <table id="browser-table" class="span12 display table table-bordered">
+        <thead>
+            <tr>
+                <th>Rendering Engine</th>
+                <th>Browser</th>
+                <th>Platform(s)</th>
+                <th>Engine version</th>
+                <th>CSS Grade</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="row">
+    <p>
+        This mode provide the default server-side processing behavior:
+    </p>
+    <ul>
+        <li>Single and multi-column sorting</li>
+        <li>Global search</li>
+        <li>References data by column index</li>
+    </ul>
+</div>
+
+{% endblock %}
+
+{% block server-side-extra-script %}
+    {% js "js/eztables.server.base.js" %}
+{% endblock %}

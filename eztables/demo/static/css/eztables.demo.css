@@ -11,10 +11,6 @@ body {
     padding-top: 50px;
 }
 
-.navbar .brand {
-    margin-left: 0;
-}
-
 #footer {
     height: 20px;
     text-align: center;
@@ -23,4 +19,34 @@ body {
 
 #footer p {
     margin: 0;
+}
+
+.navbar .brand.logo {
+    background: url(../img/DataTables.png) no-repeat left center;
+    padding-left: 45px;
+    margin-left: 10px;
+}
+
+.row {
+    margin-bottom: 15px;
+}
+
+.subnav .navbar.affix {
+    top: 40px;
+    left: 0;
+    width: 100%;
+    z-index: 2;
+}
+
+.subnav .navbar.affix .navbar-inner {
+    border-left: 0;
+    border-right: 0;
+    border-radius: 0;
+    -webkit-border-radius: 0;
+    -moz-border-radius: 0;
+    -o-border-radius: 0;
+}
+
+.subnav .navbar.affix .navbar-inner .container {
+    width: 940px;
 }

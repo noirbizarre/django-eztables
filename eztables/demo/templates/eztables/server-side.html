@@ -1,29 +1,37 @@
 {% extends "eztables/base.html" %}
 {% load js %}
 
+{% block server-side %}active{% endblock %}
+
 {% block container %}
-<div class="page-header">
-    <h1>Server-side processing</h1>
+
+<h2>Server-side processing</h2>
+
+<div class="row subnav">
+    <div class="navbar">
+        <div class="navbar-inner">
+            <div class="container">
+                <ul class="nav">
+                    <li class="{% block server-side-base %}{% endblock %}">
+                        <a href="{% url server-side %}">Base processing</a>
+                    </li>
+                    <li class="{% block server-side-search %}{% endblock %}">
+                        <a href="{% url server-side-search %}">Search modes</a>
+                    </li>
+                    <li class="{% block server-side-objects %}{% endblock %}">
+                        <a href="{% url server-side-objects %}">Using objects</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
 </div>
 
-
-<div class="row">
-    <table id="browser-table" class="span12 display table table-bordered">
-        <thead>
-            <tr>
-                <th>Rendering Engine</th>
-                <th>Browser</th>
-                <th>Platform(s)</th>
-                <th>Engine version</th>
-                <th>CSS Grade</th>
-            </tr>
-        </thead>
-        <tbody></tbody>
-    </table>
-</div>
+{% block server-side-container %}{% endblock %}
 
 {% endblock %}
 
-{% block extra_script %}
+{% block extra-script %}
     {% js "js/eztables.server.js" %}
+    {% block server-side-extra-script %}{% endblock %}
 {% endblock %}

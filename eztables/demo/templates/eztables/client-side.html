@@ -1,9 +1,11 @@
 {% extends "eztables/base.html" %}
 {% load js %}
 
+{% block client-side %}active{% endblock %}
+
 {% block container %}
 <div class="page-header">
-    <h1>Client-side processing</h1>
+    <h2>Client-side processing</hé>
 </div>
 
 <div class="row">
@@ -31,8 +33,12 @@
     </table>
 </div>
 
+<div class="row">
+    <p>This table use the Twitter Bootstrap integration: <span class="label label-warning">TODO</span></p>
+</div>
+
 {% endblock %}
 
-{% block extra_script %}
+{% block extra-script %}
     {% js "js/eztables.client.js" %}
 {% endblock %}

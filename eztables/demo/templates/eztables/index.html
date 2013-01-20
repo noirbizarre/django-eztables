@@ -3,7 +3,13 @@
 {% block container %}
 <div class="hero-unit">
     <h1>Django ezTables Demo</h1>
+
+    <p class="lead">
+        Django ezTables provides easy integration between <a href="http://datatables.net">jQuery DataTables</a> and <a href="http://www.djangoproject.com">Django</a>.
+    </p>
+
     <p>Explore Django ezTables usage through these simple demo pages</p>
+
     <p>
         <a class="btn btn-primary btn-large" href="{% url client-side %}">
             Client-side
@@ -16,9 +22,6 @@
         </a>
         <a class="btn btn-primary btn-large" href="{% url localization %}">
             Localization
-        </a>
-        <a class="btn btn-primary btn-large" href="{% url bootstrap %}">
-            Boostrap integration
         </a>
     </p>
 </div>

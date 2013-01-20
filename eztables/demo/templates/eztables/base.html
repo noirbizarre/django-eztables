@@ -13,6 +13,7 @@
     </title>
     <meta name="description" content="Django EZTables Demo">
     <meta name="author" content="Axel Haustant">
+    <link rel="shortcut icon" type="image/ico" href="{% static "img/favicon.ico" %}">
 
     {% css "css/bootstrap.min.css" %}
     {% css "css/datatables.demo.css" %}
@@ -29,34 +30,29 @@
 
     <header class="navbar navbar-fixed-top">
         <div class="navbar-inner">
-            <a class="brand" href="{% url index %}" title="EZTables Demo">
-                EZTables Demo
+            <a class="brand logo" href="{% url index %}" title="EZTables Demo">
+                ezTables
             </a>
 
             <ul class="nav">
-                <li>
+                <li class="{% block client-side %}{% endblock %}">
                     <a href="{% url client-side %}">
                         Client-side
                     </a>
                 </li>
-                <li>
+                <li class="{% block server-side %}{% endblock %}">
                     <a href="{% url server-side %}">
                         Server-side
                     </a>
                 </li>
-                <li>
+                <li class="{% block deferred-loading %}{% endblock %}">
                     <a href="{% url deferred-loading %}">
                         Deferred loading
                     </a>
-                </li>
-                <li>
+                </li >
+                <li class="{% block localization %}{% endblock %}">
                     <a href="{% url localization %}">
                         Localization
-                    </a>
-                </li>
-                <li>
-                    <a href="{% url bootstrap %}">
-                        Bootstrap integration
                     </a>
                 </li>
             </ul>
@@ -65,7 +61,7 @@
 
     <div id="main-container" class="container">
     {% block container %}{% endblock %}
-    </div> <!-- /container -->
+    </div>
 
     <footer id="footer" class="container-fluid">
       <p>&copy; <a href="http://noirbizarre.info"/>noirbizarre.info</a> 2012</p>
@@ -75,6 +71,6 @@
     {% js_lib "bootstrap.min.js" %}
     {% js_lib "jquery.dataTables.min.js" %}
     {% js_lib "datatables/datatables.bootstrap.js" %}
-    {% block extra_script %}{% endblock %}
+    {% block extra-script %}{% endblock %}
 </body>
 </html>

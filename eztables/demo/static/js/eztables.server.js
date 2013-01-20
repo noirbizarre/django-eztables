@@ -2,22 +2,19 @@
 
     "use strict";
 
-    var Column = {
-        ENGINE: 0,
-        BROWSER: 1,
-        PLATFORM: 2,
-        ENGINE_VERSION: 3,
-        GRADE: 4
-    };
+    /**
+     * Handle Server-side top navbar affix.
+     */
+    $(function() {
+        var $wrapper = $('.subnav'),
+            $subnav = $(".subnav .navbar"),
+            offset = $wrapper.position();
 
+        offset.top -= $('header.navbar').height();
 
-    $(function(){
-        $('#browser-table').dataTable({
-            "bPaginate": true,
-            "sPaginationType": "bootstrap",
-            "bProcessing": true,
-            "bServerSide": true,
-            "sAjaxSource": Django.url('browsers-datatables')
+        $wrapper.height($subnav.height());
+        $subnav.affix({
+            offset: offset
         });
     });
 
