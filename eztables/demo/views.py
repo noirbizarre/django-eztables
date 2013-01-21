@@ -27,6 +27,10 @@ class ServerSideObjectsView(TemplateView):
     template_name = 'eztables/server-side-objects.html'
 
 
+class ServerSideCustomView(TemplateView):
+    template_name = 'eztables/server-side-custom.html'
+
+
 class DeferredLoadingView(TemplateView):
     template_name = 'eztables/deferred-loading.html'
     model = Browser

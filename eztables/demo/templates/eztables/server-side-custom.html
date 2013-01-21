@@ -1,20 +1,9 @@
 {% extends "eztables/server-side.html" %}
 {% load js %}
 
-{% block server-side-base %}active{% endblock %}
+{% block server-side-custom %}active{% endblock %}
 
 {% block server-side-container %}
-
-<div class="row">
-    <p>
-        This page demonstrate the default server-side processing behavior:
-        <ul>
-            <li>Single and multi-column sorting</li>
-            <li>Global search</li>
-            <li>References data by column index</li>
-        </ul>
-    </p>
-</div>
 
 <div class="row">
     <table id="browser-table" class="span12 display table table-bordered">
@@ -34,5 +23,5 @@
 {% endblock %}
 
 {% block server-side-extra-script %}
-    {% js "js/eztables.server.base.js" %}
+    {% js "js/eztables.server.custom.js" %}
 {% endblock %}

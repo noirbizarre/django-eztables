@@ -50,3 +50,25 @@ body {
 .subnav .navbar.affix .navbar-inner .container {
     width: 940px;
 }
+
+.table.search {
+   margin-bottom: 5px;
+}
+
+.table.search td, .table.search th {
+   text-align: center;
+}
+
+.table.search td {
+   padding: 0;
+   margin: 0;
+   border-top: 0;
+}
+
+.table.search th {
+   border-bottom: 1px solid black;
+}
+
+.table.search td.spacer {
+   line-height: 5px;
+}

@@ -6,6 +6,85 @@
 {% block server-side-container %}
 
 <div class="row">
+    <p>
+        This demo is a server-side implementation of <a href="http://datatables.net/release-datatables/examples/api/regex.html">the official DataTables filtering API demo</a>.
+    </p>
+    <p>
+        Smart filtering is useless with server-side processing.
+        In fact, with ezTables Smart Filtering is enabled by default.
+    </p>
+</div>
+
+<div class="row">
+    <table class="table search">
+        <thead>
+            <tr>
+                <th>Target</th>
+                <th>Filter text</th>
+                <th>Treat as regex</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td class="spacer" colspan="3">&nbsp;</td></tr>
+            <tr class="global">
+                <td>Global</td>
+                <td>
+                    <input id="global-filter" type="text"
+                        class="input-xxlarge"
+                        placeholder="Global search">
+                </td>
+                <td><input id="global-regex" type="checkbox"/></td>
+            </tr>
+            <tr class="engine">
+                <td>Rendering engine</td>
+                <td>
+                    <input id="filter-0" type="text"
+                        class="input-xxlarge"
+                        placeholder="Rendering engine search">
+                </td>
+                <td><input id="regex-0" type="checkbox"/></td>
+            </tr>
+            <tr class="browser">
+                <td>Browser</td>
+                <td>
+                    <input id="filter-1" type="text"
+                        class="input-xxlarge"
+                        placeholder="Browser search">
+                </td>
+                <td><input id="regex-1" type="checkbox"/></td>
+            </tr>
+            <tr class="platform">
+                <td>Platform(s)</td>
+                <td>
+                    <input id="filter-2" type="text"
+                        class="input-xxlarge"
+                        placeholder="Platform search">
+                </td>
+                <td><input id="regex-2" type="checkbox"/></td>
+            </tr>
+            <tr class="version">
+                <td>Engine version</td>
+                <td>
+                    <input id="filter-3" type="text"
+                        class="input-xxlarge"
+                        placeholder="Engine version search">
+                </td>
+                <td><input id="regex-3" type="checkbox"/></td>
+            </tr>
+            <tr class="grade">
+                <td>CSS Grade</td>
+                <td>
+                    <input id="filter-4" type="text"
+                        class="input-xxlarge"
+                        placeholder="CSS grade search">
+                </td>
+                <td><input id="regex-4" type="checkbox"/></td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="row">
     <table id="browser-table" class="span12 display table table-bordered">
         <thead>
             <tr>
