@@ -416,6 +416,19 @@ class DatatablesTestMixin(object):
             self.assertEqual(row[0], 'engine')
             self.assertEqual(row[1], 'test')
 
+    def test_global_search_regex(self):
+        '''Should do a global search on a regex'''
+        for _ in xrange(3):
+            BrowserFactory()
+        for _ in xrange(2):
+            BrowserFactory(name='test')
+
+        response = self.get_response('browsers', self.build_query(sSearch='[tes]{4}', bRegex=True))
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 2)
+        for row in data['aaData']:
+            self.assertEqual(row[1], 'test')
+
     def test_column_search_single_column(self):
         '''Should filter on a single² column'''
         for _ in xrange(3):
@@ -457,6 +470,19 @@ class DatatablesTestMixin(object):
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
             self.assertTrue(row[1].startswith('test'))
+
+    def test_column_search_regex(self):
+        '''Should filter on a single² column'''
+        for _ in xrange(3):
+            BrowserFactory()
+        for _ in xrange(2):
+            BrowserFactory(name='test')
+
+        response = self.get_response('browsers', self.build_query(sSearch_1='[tes]{4}', bRegex_1=True))
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 2)
+        for row in data['aaData']:
+            self.assertEqual(row[1], 'test')
 
 
 class DatatablesGetTest(DatatablesTestMixin, TestCase):

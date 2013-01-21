@@ -70,11 +70,17 @@ class DatatablesView(MultipleObjectMixin, View):
 
     def global_search(self, queryset):
         '''Filter a queryset with global search'''
-        if self.form.cleaned_data['sSearch']:
-            for term in self.form.cleaned_data['sSearch'].split():
-                criterions = (Q(**{'%s__icontains' % field: term}) for field in self.get_fields())
+        search = self.form.cleaned_data['sSearch']
+        if search:
+            if self.form.cleaned_data['bRegex']:
+                criterions = (Q(**{'%s__iregex' % field: search}) for field in self.get_fields())
                 search = reduce(or_, criterions)
                 queryset = queryset.filter(search)
+            else:
+                for term in search.split():
+                    criterions = (Q(**{'%s__icontains' % field: term}) for field in self.get_fields())
+                    search = reduce(or_, criterions)
+                    queryset = queryset.filter(search)
         return queryset
 
     def column_search(self, queryset):
@@ -84,10 +90,15 @@ class DatatablesView(MultipleObjectMixin, View):
             if search:
                 field = self.fields[idx]
                 fields = RE_FORMATTED.findall(field) if RE_FORMATTED.match(field) else [field]
-                for term in search.split():
-                    criterions = (Q(**{'%s__icontains' % field: term}) for field in fields)
+                if self.form.cleaned_data['bRegex_%s' % idx]:
+                    criterions = (Q(**{'%s__iregex' % field: search}) for field in fields)
                     search = reduce(or_, criterions)
                     queryset = queryset.filter(search)
+                else:
+                    for term in search.split():
+                        criterions = (Q(**{'%s__icontains' % field: term}) for field in fields)
+                        search = reduce(or_, criterions)
+                        queryset = queryset.filter(search)
         return queryset
 
     def get_queryset(self):
