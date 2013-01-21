@@ -32,7 +32,7 @@
             "sPaginationType": "bootstrap",
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": Django.url('browsers-datatables')
+            "sAjaxSource": Django.url('DT-browsers-default')
         });
 
         $("#global-filter").keyup( fnFilterGlobal );

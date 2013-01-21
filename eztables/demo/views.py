@@ -65,11 +65,21 @@ class FormattedBrowserDatatablesView(DatatablesView):
 
 class ObjectBrowserDatatablesView(DatatablesView):
     model = Browser
-    as_object = True
-    fields = (
-        'engine__name',
-        '{name} {version}',
-        'platform',
-        'engine__version',
-        'engine__css_grade',
-    )
+    fields = {
+        'name': 'name',
+        'engine': 'engine__name',
+        'platform': 'platform',
+        'engine_version': 'engine__version',
+        'css_grade': 'engine__css_grade',
+    }
+
+
+class FormattedObjectBrowserDatatablesView(DatatablesView):
+    model = Browser
+    fields = {
+        'name': '{name} {version}',
+        'engine': 'engine__name',
+        'platform': 'platform',
+        'engine_version': 'engine__version',
+        'css_grade': 'engine__css_grade',
+    }

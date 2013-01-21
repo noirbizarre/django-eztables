@@ -12,7 +12,12 @@ from factory import Factory, SubFactory, Sequence
 from eztables.forms import DatatablesForm
 from eztables.views import RE_FORMATTED
 from eztables.demo.models import Browser, Engine
-from eztables.demo.views import BrowserDatatablesView, FormattedBrowserDatatablesView
+from eztables.demo.views import (
+    BrowserDatatablesView,
+    FormattedBrowserDatatablesView,
+    ObjectBrowserDatatablesView,
+    FormattedObjectBrowserDatatablesView,
+)
 
 
 class EngineFactory(Factory):
@@ -185,13 +190,18 @@ class FormattedFieldRegexTest(unittest.TestCase):
             self.assertEqual(matches[i], 'nested__field_%s' % i)
 
 
+ENGINE_NAME, NAME, PLATFORM, ENGINE_VERSION, ENGINE_CSS_GRADE = range(5)
+
+
 class DatatablesTestMixin(object):
-    urls = patterns('',
-        url(r'^$', BrowserDatatablesView.as_view(), name='browsers'),
-        url(r'^formatted/$', FormattedBrowserDatatablesView.as_view(), name='formatted-browsers'),
-    )
 
     def get_response(self, name, data={}):
+        raise NotImplemented
+
+    def value(self, row, field_id):
+        raise NotImplemented
+
+    def assertInstance(self, row):
         raise NotImplemented
 
     def build_query(self, **kwargs):
@@ -268,7 +278,7 @@ class DatatablesTestMixin(object):
         self.assertTrue('aaData' in data)
         self.assertEqual(len(data['aaData']), len(browsers))
         for row in data['aaData']:
-            self.assertEqual(len(row), 5)
+            self.assertInstance(row)
 
     def test_paginated(self):
         '''Should return a paginated Datatables JSON response'''
@@ -288,7 +298,7 @@ class DatatablesTestMixin(object):
         self.assertTrue('aaData' in data)
         self.assertEqual(len(data['aaData']), 10)
         for row in data['aaData']:
-            self.assertEqual(len(row), 5)
+            self.assertInstance(row)
 
     def test_formatted(self):
         '''Should return an formatted Datatables JSON response'''
@@ -308,7 +318,7 @@ class DatatablesTestMixin(object):
         self.assertTrue('aaData' in data)
         self.assertEqual(len(data['aaData']), 10)
         for row in data['aaData']:
-            self.assertEqual(len(row), 5)
+            self.assertInstance(row)
 
     def test_sorted_single_field(self):
         '''Should handle sorting on a single field'''
@@ -321,7 +331,8 @@ class DatatablesTestMixin(object):
 
         data = json.loads(response.content)
         for idx, row in enumerate(data['aaData']):
-            self.assertEqual(row[1], 'Browser %s' % (4 - idx))
+            field_value = self.value(row, NAME)
+            self.assertEqual(field_value, 'Browser %s' % (4 - idx))
 
     def test_sorted_multiple_field(self):
         '''Should handle sorting on multiple field'''
@@ -353,8 +364,8 @@ class DatatablesTestMixin(object):
         )
         for idx, row in enumerate(data['aaData']):
             expected_name, expected_version = expected[idx]
-            self.assertEqual(row[1], expected_name)
-            self.assertEqual(row[3], expected_version)
+            self.assertEqual(self.value(row, NAME), expected_name)
+            self.assertEqual(self.value(row, ENGINE_VERSION), expected_version)
 
     def test_sorted_formatted(self):
         '''Should handle sorting with formatting'''
@@ -379,7 +390,7 @@ class DatatablesTestMixin(object):
             'Browser 0 0',
         )
         for idx, row in enumerate(data['aaData']):
-            self.assertEqual(row[1], expected[idx])
+            self.assertEqual(self.value(row, NAME), expected[idx])
 
     def test_global_search_single_term(self):
         '''Should do a global search on a single term'''
@@ -392,13 +403,13 @@ class DatatablesTestMixin(object):
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
-            self.assertEqual(row[1], 'test')
+            self.assertEqual(self.value(row, NAME), 'test')
 
         response = self.get_response('browsers', self.build_query(sSearch='engine'))
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 3)
         for row in data['aaData']:
-            self.assertEqual(row[0], 'engine')
+            self.assertEqual(self.value(row, ENGINE_NAME), 'engine')
 
     def test_global_search_many_terms(self):
         '''Should do a global search on many terms'''
@@ -413,8 +424,8 @@ class DatatablesTestMixin(object):
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 4)
         for row in data['aaData']:
-            self.assertEqual(row[0], 'engine')
-            self.assertEqual(row[1], 'test')
+            self.assertEqual(self.value(row, ENGINE_NAME), 'engine')
+            self.assertEqual(self.value(row, NAME), 'test')
 
     def test_global_search_regex(self):
         '''Should do a global search on a regex'''
@@ -427,7 +438,7 @@ class DatatablesTestMixin(object):
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
-            self.assertEqual(row[1], 'test')
+            self.assertEqual(self.value(row, NAME), 'test')
 
     def test_column_search_single_column(self):
         '''Should filter on a single² column'''
@@ -440,7 +451,7 @@ class DatatablesTestMixin(object):
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
-            self.assertEqual(row[1], 'test')
+            self.assertEqual(self.value(row, NAME), 'test')
 
     def test_column_search_many_columns(self):
         '''Should filter on many columns'''
@@ -455,8 +466,8 @@ class DatatablesTestMixin(object):
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 4)
         for row in data['aaData']:
-            self.assertEqual(row[0], 'engine')
-            self.assertEqual(row[1], 'test')
+            self.assertEqual(self.value(row, ENGINE_NAME), 'engine')
+            self.assertEqual(self.value(row, NAME), 'test')
 
     def test_column_search_formatted_column(self):
         '''Should filter on a formatted column'''
@@ -469,7 +480,7 @@ class DatatablesTestMixin(object):
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
-            self.assertTrue(row[1].startswith('test'))
+            self.assertTrue(self.value(row, NAME).startswith('test'))
 
     def test_column_search_regex(self):
         '''Should filter on a single² column'''
@@ -482,14 +493,74 @@ class DatatablesTestMixin(object):
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
-            self.assertEqual(row[1], 'test')
+            self.assertEqual(self.value(row, NAME), 'test')
 
 
-class DatatablesGetTest(DatatablesTestMixin, TestCase):
+class ArrayMixin(object):
+    urls = patterns('',
+        url(r'^$', BrowserDatatablesView.as_view(), name='browsers'),
+        url(r'^formatted/$', FormattedBrowserDatatablesView.as_view(), name='formatted-browsers'),
+    )
+
+    def value(self, row, field_id):
+        return row[field_id]
+
+    def assertInstance(self, row):
+        self.assertTrue(isinstance(row, list))
+        self.assertEqual(len(row), 5)
+
+
+class ObjectMixin(object):
+    urls = patterns('',
+        url(r'^$', ObjectBrowserDatatablesView.as_view(), name='browsers'),
+        url(r'^formatted/$', FormattedObjectBrowserDatatablesView.as_view(), name='formatted-browsers'),
+    )
+
+    id_to_name = {
+        0: 'engine',
+        1: 'name',
+        2: 'platform',
+        3: 'engine_version',
+        5: 'css_grade',
+    }
+
+    def build_query(self, **kwargs):
+        query = super(ObjectMixin, self).build_query(**kwargs)
+        query.update(dict((
+            ('mDataProp_%s' % k, v) for k, v in self.id_to_name.iteritems()
+        )))
+        return query
+
+    def value(self, row, field_id):
+        return row[self.id_to_name[field_id]]
+
+    def assertInstance(self, row):
+        self.assertTrue(isinstance(row, dict))
+        for key in self.id_to_name.values():
+            self.assertTrue(key in row)
+
+
+class GetMixin(object):
     def get_response(self, name, data={}):
         return self.client.get(reverse(name), data)
 
 
-class DatatablesPostTest(DatatablesTestMixin, TestCase):
+class PostMixin(object):
     def get_response(self, name, data={}):
         return self.client.post(reverse(name), data)
+
+
+class DatatablesArrayGetTest(ArrayMixin, GetMixin, DatatablesTestMixin, TestCase):
+    pass
+
+
+class DatatablesArrayPostTest(ArrayMixin, PostMixin, DatatablesTestMixin, TestCase):
+    pass
+
+
+class DatatablesObjGetTest(ObjectMixin, GetMixin, DatatablesTestMixin, TestCase):
+    pass
+
+
+class DatatablesObjPostTest(ObjectMixin, PostMixin, DatatablesTestMixin, TestCase):
+    pass

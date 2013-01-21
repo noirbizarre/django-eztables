@@ -26,41 +26,51 @@ class DatatablesView(MultipleObjectMixin, View):
     See: http://www.datatables.net/usage/server-side
     '''
     fields = []
-    _fields = None
+    _db_fields = None
 
     def post(self, request, *args, **kwargs):
-        return self.process_response(request.POST)
+        return self.process_dt_response(request.POST)
 
     def get(self, request, *args, **kwargs):
-        return self.process_response(request.GET)
+        return self.process_dt_response(request.GET)
 
-    def process_response(self, data):
+    def process_dt_response(self, data):
         self.form = DatatablesForm(data)
         if self.form.is_valid():
-            self.object_list = self.get_queryset().values(*self.get_fields())
+            self.object_list = self.get_queryset().values(*self.get_db_fields())
             return self.render_to_response(self.form)
         else:
             return HttpResponseBadRequest()
 
-    def get_fields(self):
-        if not self._fields:
-            self._fields = []
-            for field in self.fields:
+    def get_db_fields(self):
+        if not self._db_fields:
+            self._db_fields = []
+            fields = self.fields.values() if isinstance(self.fields, dict) else self.fields
+            for field in fields:
                 if RE_FORMATTED.match(field):
-                    self._fields.extend(RE_FORMATTED.findall(field))
+                    self._db_fields.extend(RE_FORMATTED.findall(field))
                 else:
-                    self._fields.append(field)
-        return self._fields
+                    self._db_fields.append(field)
+        return self._db_fields
+
+    @property
+    def dt_data(self):
+        return self.form.cleaned_data
+
+    def get_field(self, index):
+        if isinstance(self.fields, dict):
+            return self.fields[self.dt_data['mDataProp_%s' % index]]
+        else:
+            return self.fields[index]
 
     def get_orders(self):
         '''Get ordering fields for ``QuerySet.order_by``'''
-        iSortingCols = self.form.cleaned_data['iSortingCols']
-        orders_idx = [self.form.cleaned_data['iSortCol_%s' % i] for i in xrange(iSortingCols)]
-        orders_dirs = [self.form.cleaned_data['sSortDir_%s' % i] for i in xrange(iSortingCols)]
         orders = []
-        for idx, field_idx in enumerate(orders_idx):
-            field, direction = self.fields[field_idx], orders_dirs[idx]
-            direction = '-' if direction == DESC else ''
+        iSortingCols = self.dt_data['iSortingCols']
+        dt_orders = [(self.dt_data['iSortCol_%s' % i], self.dt_data['sSortDir_%s' % i]) for i in xrange(iSortingCols)]
+        for field_idx, field_dir in dt_orders:
+            field = self.get_field(field_idx)
+            direction = '-' if field_dir == DESC else ''
             if RE_FORMATTED.match(field):
                 tokens = RE_FORMATTED.findall(field)
                 orders.extend(['%s%s' % (direction, token) for token in tokens])
@@ -70,27 +80,27 @@ class DatatablesView(MultipleObjectMixin, View):
 
     def global_search(self, queryset):
         '''Filter a queryset with global search'''
-        search = self.form.cleaned_data['sSearch']
+        search = self.dt_data['sSearch']
         if search:
-            if self.form.cleaned_data['bRegex']:
-                criterions = (Q(**{'%s__iregex' % field: search}) for field in self.get_fields())
+            if self.dt_data['bRegex']:
+                criterions = (Q(**{'%s__iregex' % field: search}) for field in self.get_db_fields())
                 search = reduce(or_, criterions)
                 queryset = queryset.filter(search)
             else:
                 for term in search.split():
-                    criterions = (Q(**{'%s__icontains' % field: term}) for field in self.get_fields())
+                    criterions = (Q(**{'%s__icontains' % field: term}) for field in self.get_db_fields())
                     search = reduce(or_, criterions)
                     queryset = queryset.filter(search)
         return queryset
 
     def column_search(self, queryset):
         '''Filter a queryset with column search'''
-        for idx in xrange(self.form.cleaned_data['iColumns']):
-            search = self.form.cleaned_data['sSearch_%s' % idx]
+        for idx in xrange(self.dt_data['iColumns']):
+            search = self.dt_data['sSearch_%s' % idx]
             if search:
-                field = self.fields[idx]
+                field = self.get_field(idx)
                 fields = RE_FORMATTED.findall(field) if RE_FORMATTED.match(field) else [field]
-                if self.form.cleaned_data['bRegex_%s' % idx]:
+                if self.dt_data['bRegex_%s' % idx]:
                     criterions = (Q(**{'%s__iregex' % field: search}) for field in fields)
                     search = reduce(or_, criterions)
                     queryset = queryset.filter(search)
@@ -125,7 +135,13 @@ class DatatablesView(MultipleObjectMixin, View):
 
     def get_row(self, row):
         '''Format a single row (if necessary)'''
-        return [field.format(**row) if RE_FORMATTED.match(field) else row[field] for field in self.fields]
+        if isinstance(self.fields, dict):
+            return dict([
+                (key, value.format(**row) if RE_FORMATTED.match(value) else row[value])
+                for key, value in self.fields.items()
+            ])
+        else:
+            return [field.format(**row) if RE_FORMATTED.match(field) else row[field] for field in self.fields]
 
     def render_to_response(self, form, **kwargs):
         '''Render Datatables expected JSON format'''
