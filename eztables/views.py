@@ -68,18 +68,40 @@ class DatatablesView(MultipleObjectMixin, View):
                 orders.append('%s%s' % (direction, field))
         return orders
 
-    def get_queryset(self):
-        '''Apply Datatables sort and search criterion to QuerySet'''
-        qs = super(DatatablesView, self).get_queryset()
+    def global_search(self, queryset):
+        '''Filter a queryset with global search'''
         if self.form.cleaned_data['sSearch']:
             for term in self.form.cleaned_data['sSearch'].split():
                 criterions = (Q(**{'%s__icontains' % field: term}) for field in self.get_fields())
                 search = reduce(or_, criterions)
-                qs = qs.filter(search)
+                queryset = queryset.filter(search)
+        return queryset
+
+    def column_search(self, queryset):
+        '''Filter a queryset with column search'''
+        for idx in xrange(self.form.cleaned_data['iColumns']):
+            search = self.form.cleaned_data['sSearch_%s' % idx]
+            if search:
+                field = self.fields[idx]
+                fields = RE_FORMATTED.findall(field) if RE_FORMATTED.match(field) else [field]
+                for term in search.split():
+                    criterions = (Q(**{'%s__icontains' % field: term}) for field in fields)
+                    search = reduce(or_, criterions)
+                    queryset = queryset.filter(search)
+        return queryset
+
+    def get_queryset(self):
+        '''Apply Datatables sort and search criterion to QuerySet'''
+        qs = super(DatatablesView, self).get_queryset()
+        # Perform global search
+        qs = self.global_search(qs)
+        # Perform column search
+        qs = self.column_search(qs)
+        # Return the ordered queryset
         return qs.order_by(*self.get_orders())
 
     def get_page(self, form):
-        '''Get the request page'''
+        '''Get the requested page'''
         page_size = form.cleaned_data['iDisplayLength']
         start_index = form.cleaned_data['iDisplayStart']
         paginator = Paginator(self.object_list, page_size)

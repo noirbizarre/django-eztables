@@ -194,19 +194,49 @@ class DatatablesTestMixin(object):
     def get_response(self, name, data={}):
         raise NotImplemented
 
-    def test_empty(self):
-        '''Should return an empty Datatables JSON response'''
-        response = self.get_response('browsers', {
+    def build_query(self, **kwargs):
+        query = {
             'sEcho': '1',
             'iColumns': '5',
             'iDisplayStart': '0',
             'iDisplayLength': '10',
             'sSearch': '',
             'bRegex': 'false',
+            'mDataProp_0': '0',
+            'mDataProp_1': '1',
+            'mDataProp_2': '2',
+            'mDataProp_3': '3',
+            'mDataProp_4': '4',
+            'sSearch_0': '',
+            'sSearch_1': '',
+            'sSearch_2': '',
+            'sSearch_3': '',
+            'sSearch_4': '',
+            'bRegex_0': 'false',
+            'bRegex_1': 'false',
+            'bRegex_2': 'false',
+            'bRegex_3': 'false',
+            'bRegex_4': 'false',
+            'bSearchable_0': 'true',
+            'bSearchable_1': 'true',
+            'bSearchable_2': 'true',
+            'bSearchable_3': 'true',
+            'bSearchable_4': 'true',
+            'bSortable_0': 'true',
+            'bSortable_1': 'true',
+            'bSortable_2': 'true',
+            'bSortable_3': 'true',
+            'bSortable_4': 'true',
             'iSortingCols': '1',
             'iSortCol_0': '0',
             'sSortDir_0': 'asc',
-        })
+        }
+        query.update(kwargs)
+        return query
+
+    def test_empty(self):
+        '''Should return an empty Datatables JSON response'''
+        response = self.get_response('browsers', self.build_query())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
@@ -224,17 +254,7 @@ class DatatablesTestMixin(object):
         '''Should return an unpaginated Datatables JSON response'''
         browsers = [BrowserFactory() for _ in xrange(5)]
 
-        response = self.get_response('browsers', {
-            'sEcho': '1',
-            'iColumns': '5',
-            'iDisplayStart': '0',
-            'iDisplayLength': '10',
-            'sSearch': '',
-            'bRegex': 'false',
-            'iSortingCols': '1',
-            'iSortCol_0': '0',
-            'sSortDir_0': 'asc',
-        })
+        response = self.get_response('browsers', self.build_query())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
@@ -254,17 +274,7 @@ class DatatablesTestMixin(object):
         '''Should return a paginated Datatables JSON response'''
         browsers = [BrowserFactory() for _ in xrange(15)]
 
-        response = self.get_response('browsers', {
-            'sEcho': '1',
-            'iColumns': '5',
-            'iDisplayStart': '0',
-            'iDisplayLength': '10',
-            'sSearch': '',
-            'bRegex': 'true',
-            'iSortingCols': '1',
-            'iSortCol_0': '0',
-            'sSortDir_0': 'asc',
-        })
+        response = self.get_response('browsers', self.build_query())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
@@ -284,17 +294,7 @@ class DatatablesTestMixin(object):
         '''Should return an formatted Datatables JSON response'''
         browsers = [BrowserFactory() for _ in xrange(15)]
 
-        response = self.get_response('formatted-browsers', {
-            'sEcho': '1',
-            'iColumns': '5',
-            'iDisplayStart': '0',
-            'iDisplayLength': '10',
-            'sSearch': '',
-            'bRegex': 'true',
-            'iSortingCols': '1',
-            'iSortCol_0': '0',
-            'sSortDir_0': 'asc',
-        })
+        response = self.get_response('formatted-browsers', self.build_query())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
@@ -315,17 +315,7 @@ class DatatablesTestMixin(object):
         for i in xrange(5):
             BrowserFactory(name='Browser %s' % i)
 
-        response = self.get_response('browsers', {
-            'sEcho': '1',
-            'iColumns': '5',
-            'iDisplayStart': '0',
-            'iDisplayLength': '10',
-            'sSearch': '',
-            'bRegex': 'false',
-            'iSortingCols': '1',
-            'iSortCol_0': '1',
-            'sSortDir_0': 'desc',
-        })
+        response = self.get_response('browsers', self.build_query(iSortCol_0=1, sSortDir_0='desc'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
@@ -338,19 +328,13 @@ class DatatablesTestMixin(object):
         for i in xrange(10):
             BrowserFactory(name='Browser %s' % (i / 2), engine__version='%s' % i)
 
-        response = self.get_response('browsers', {
-            'sEcho': '1',
-            'iColumns': '5',
-            'iDisplayStart': '0',
-            'iDisplayLength': '10',
-            'sSearch': '',
-            'bRegex': 'false',
-            'iSortingCols': '1',
-            'iSortCol_0': '1',
-            'sSortDir_0': 'desc',
-            'iSortCol_1': '3',
-            'sSortDir_1': 'asc',
-        })
+        response = self.get_response('browsers', self.build_query(
+            iSortingCols=2,
+            iSortCol_0=1,
+            sSortDir_0='desc',
+            iSortCol_1=3,
+            sSortDir_1='asc'
+        ))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
@@ -377,17 +361,7 @@ class DatatablesTestMixin(object):
         for i in xrange(10):
             BrowserFactory(name='Browser %s' % (i / 2), version='%s' % i)
 
-        response = self.get_response('formatted-browsers', {
-            'sEcho': '1',
-            'iColumns': '5',
-            'iDisplayStart': '0',
-            'iDisplayLength': '10',
-            'sSearch': '',
-            'bRegex': 'false',
-            'iSortingCols': '1',
-            'iSortCol_0': '1',
-            'sSortDir_0': 'desc',
-        })
+        response = self.get_response('formatted-browsers', self.build_query(iSortCol_0=1, sSortDir_0='desc'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
@@ -414,26 +388,13 @@ class DatatablesTestMixin(object):
         for _ in xrange(3):
             BrowserFactory(engine__name='engine')
 
-        query = {
-            'sEcho': '1',
-            'iColumns': '5',
-            'iDisplayStart': '0',
-            'iDisplayLength': '10',
-            'sSearch': 'test',
-            'bRegex': 'false',
-            'iSortingCols': '1',
-            'iSortCol_0': '0',
-            'sSortDir_0': 'asc',
-        }
-
-        response = self.get_response('browsers', query)
+        response = self.get_response('browsers', self.build_query(sSearch='test'))
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
             self.assertEqual(row[1], 'test')
 
-        query['sSearch'] = 'engine'
-        response = self.get_response('browsers', query)
+        response = self.get_response('browsers', self.build_query(sSearch='engine'))
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 3)
         for row in data['aaData']:
@@ -448,24 +409,54 @@ class DatatablesTestMixin(object):
         for _ in xrange(4):
             BrowserFactory(name='test', engine__name='engine')
 
-        query = {
-            'sEcho': '1',
-            'iColumns': '5',
-            'iDisplayStart': '0',
-            'iDisplayLength': '10',
-            'sSearch': 'test engine',
-            'bRegex': 'false',
-            'iSortingCols': '1',
-            'iSortCol_0': '0',
-            'sSortDir_0': 'asc',
-        }
-
-        response = self.get_response('browsers', query)
+        response = self.get_response('browsers', self.build_query(sSearch='test engine'))
         data = json.loads(response.content)
         self.assertEqual(len(data['aaData']), 4)
         for row in data['aaData']:
-            self.assertEqual(row[1], 'test')
             self.assertEqual(row[0], 'engine')
+            self.assertEqual(row[1], 'test')
+
+    def test_column_search_single_column(self):
+        '''Should filter on a single² column'''
+        for _ in xrange(3):
+            BrowserFactory()
+        for _ in xrange(2):
+            BrowserFactory(name='test')
+
+        response = self.get_response('browsers', self.build_query(sSearch_1='tes'))
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 2)
+        for row in data['aaData']:
+            self.assertEqual(row[1], 'test')
+
+    def test_column_search_many_columns(self):
+        '''Should filter on many columns'''
+        for _ in xrange(2):
+            BrowserFactory(name='test')
+        for _ in xrange(3):
+            BrowserFactory(engine__name='engine')
+        for _ in xrange(4):
+            BrowserFactory(name='test', engine__name='engine')
+
+        response = self.get_response('browsers', self.build_query(sSearch_0='eng', sSearch_1='tes'))
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 4)
+        for row in data['aaData']:
+            self.assertEqual(row[0], 'engine')
+            self.assertEqual(row[1], 'test')
+
+    def test_column_search_formatted_column(self):
+        '''Should filter on a formatted column'''
+        for _ in xrange(3):
+            BrowserFactory()
+        for _ in xrange(2):
+            BrowserFactory(name='test')
+
+        response = self.get_response('formatted-browsers', self.build_query(sSearch_1='tes'))
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 2)
+        for row in data['aaData']:
+            self.assertTrue(row[1].startswith('test'))
 
 
 class DatatablesGetTest(DatatablesTestMixin, TestCase):

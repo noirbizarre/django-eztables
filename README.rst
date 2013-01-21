@@ -37,8 +37,8 @@ Features
 
 - Datatables.net, plugins and localization integration with Django.
 - Server-side processing with a simple view supporting:
-    - sorting
-    - searching
+    - sorting (single and multi columns)
+    - filtering with regex support (global and by column)
     - formatting using format pattern
 - Deferred loading support.
 - Twitter Bootstrap integration.
@@ -47,7 +47,7 @@ Features
 Demo
 ====
 
-You can try the demo by cloning this repository and doing:
+You can try the demo by cloning this repository and running the test server with provided data:
 
 .. code-block:: bash
 
