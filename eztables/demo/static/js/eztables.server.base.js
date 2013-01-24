@@ -1,4 +1,4 @@
-(function($, Django){
+(function($, Django, Demo){
 
     "use strict";
 
@@ -9,8 +9,9 @@
             "sPaginationType": "bootstrap",
             "bProcessing": true,
             "bServerSide": true,
-            "sAjaxSource": Django.url('DT-browsers-default')
+            "sAjaxSource": Django.url('DT-browsers-default'),
+            "fnRowCallback": Demo.colorRow
         });
     });
 
-}(window.jQuery, window.Django));
+}(window.jQuery, window.Django, window.Demo));

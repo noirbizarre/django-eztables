@@ -45,7 +45,7 @@
             },
 
             "fnUpdate": function ( oSettings, fnDraw ) {
-                var iListLength = 5
+                var iListLength = $.fn.dataTableExt.oPagination.iFullNumbersShowPages
                 , oPaging = oSettings.oInstance.fnPagingInfo()
                 , an = oSettings.aanFeatures.p
                 , iHalf = Math.floor(iListLength/2)

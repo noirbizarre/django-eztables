@@ -1,4 +1,4 @@
-(function($, Django){
+(function($, Django, Demo){
 
     "use strict";
 
@@ -9,6 +9,7 @@
             "bProcessing": true,
             "bServerSide": true,
             "sAjaxSource": Django.url('DT-browsers-objects'),
+            "fnRowCallback": Demo.colorRow,
             "aoColumns": [
                 { "mData": "engine" },
                 { "mData": "name" },
@@ -20,4 +21,4 @@
     });
 
 
-}(window.jQuery, window.Django));
+}(window.jQuery, window.Django, window.Demo));

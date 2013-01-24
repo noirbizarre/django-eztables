@@ -72,3 +72,27 @@ body {
 .table.search td.spacer {
    line-height: 5px;
 }
+
+/*
+ * Fix bootstrap .table-striped with colors
+ */
+.table-striped tbody tr.success:nth-child(odd):not(:hover) > td {
+  background-color: #D0E9B5;
+}
+
+.table-striped tbody tr.error:nth-child(odd):not(:hover) > td {
+  background-color: #ebccb5;
+}
+
+.table-striped tbody tr.warning:nth-child(odd):not(:hover) > td {
+  background-color: #faf2b5;
+}
+
+.table-striped tbody tr.info:nth-child(odd):not(:hover) > td {
+  background-color: #c4e3e0;
+}
+
+pre {
+  background: #002b36;
+  color: #839496;
+}

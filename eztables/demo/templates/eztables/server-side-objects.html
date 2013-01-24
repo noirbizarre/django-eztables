@@ -1,12 +1,12 @@
 {% extends "eztables/server-side.html" %}
-{% load js %}
+{% load js staticfiles %}
 
 {% block server-side-objects %}active{% endblock %}
 
 {% block server-side-container %}
 
 <div class="row">
-    <table id="browser-table" class="span12 display table table-bordered">
+    <table id="browser-table" class="span12 display table table-bordered table-condensed table-striped">
         <thead>
             <tr>
                 <th>Rendering Engine</th>
@@ -18,6 +18,10 @@
         </thead>
         <tbody></tbody>
     </table>
+</div>
+
+<div class="row">
+    <pre data-url="{% static "js/eztables.server.objects.js" %}" class="javascript"/>
 </div>
 
 {% endblock %}
