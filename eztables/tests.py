@@ -457,7 +457,7 @@ class DatatablesTestMixin(object):
             self.assertEqual(self.value(row, NAME), 'test')
 
     def test_column_search_single_column(self):
-        '''Should filter on a single² column'''
+        '''Should filter on a single column'''
         for _ in xrange(3):
             BrowserFactory()
         for _ in xrange(2):
@@ -499,7 +499,7 @@ class DatatablesTestMixin(object):
             self.assertTrue(self.value(row, NAME).startswith('test'))
 
     def test_column_search_regex(self):
-        '''Should filter on a single² column'''
+        '''Should filter on a single column with regex'''
         for _ in xrange(3):
             BrowserFactory()
         for _ in xrange(2):
@@ -510,6 +510,25 @@ class DatatablesTestMixin(object):
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
             self.assertEqual(self.value(row, NAME), 'test')
+
+    def test_column_search_custom(self):
+        '''Should filter on a single column with custom search'''
+        for i in xrange(3):
+            BrowserFactory(version='%s.%s' % (i, i))
+        for _ in xrange(2):
+            BrowserFactory(name='test')
+
+        response = self.get_response('custom-browsers', self.build_query(sSearch_1='tes'))
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 0)
+        for row in data['aaData']:
+            self.assertEqual(self.value(row, NAME), 'test')
+
+        response = self.get_response('custom-browsers', self.build_query(sSearch_1='1.1'))
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 1)
+        for row in data['aaData']:
+            self.assertNotEqual(self.value(row, NAME), 'test')
 
 
 class ArrayMixin(object):

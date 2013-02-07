@@ -93,7 +93,7 @@ class CustomSearchSort(object):
 
     def search_col_1(self, search, queryset):
         '''Search on version instead of name'''
-        pass
+        return queryset.filter(version__icontains=search)
 
 
 class CustomBrowserDatatablesView(CustomSearchSort, BrowserDatatablesView):
