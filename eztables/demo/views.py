@@ -83,3 +83,22 @@ class FormattedObjectBrowserDatatablesView(DatatablesView):
         'engine_version': 'engine__version',
         'css_grade': 'engine__css_grade',
     }
+
+
+class CustomSearchSort(object):
+
+    def sort_col_1(self, direction):
+        '''Sort on version instead of name'''
+        return '%sversion' % direction
+
+    def search_col_1(self, search, queryset):
+        '''Search on version instead of name'''
+        pass
+
+
+class CustomBrowserDatatablesView(CustomSearchSort, BrowserDatatablesView):
+    pass
+
+
+class CustomObjectBrowserDatatablesView(CustomSearchSort, ObjectBrowserDatatablesView):
+    pass

@@ -69,13 +69,17 @@ class DatatablesView(MultipleObjectMixin, View):
         iSortingCols = self.dt_data['iSortingCols']
         dt_orders = [(self.dt_data['iSortCol_%s' % i], self.dt_data['sSortDir_%s' % i]) for i in xrange(iSortingCols)]
         for field_idx, field_dir in dt_orders:
-            field = self.get_field(field_idx)
             direction = '-' if field_dir == DESC else ''
-            if RE_FORMATTED.match(field):
-                tokens = RE_FORMATTED.findall(field)
-                orders.extend(['%s%s' % (direction, token) for token in tokens])
+            if hasattr(self, 'sort_col_%s' % field_idx):
+                method = getattr(self, 'sort_col_%s' % field_idx)
+                orders.append(method(direction))
             else:
-                orders.append('%s%s' % (direction, field))
+                field = self.get_field(field_idx)
+                if RE_FORMATTED.match(field):
+                    tokens = RE_FORMATTED.findall(field)
+                    orders.extend(['%s%s' % (direction, token) for token in tokens])
+                else:
+                    orders.append('%s%s' % (direction, field))
         return orders
 
     def global_search(self, queryset):

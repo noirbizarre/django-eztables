@@ -4,7 +4,7 @@ Changelog
 Current
 -------
 
-- nothing yet
+- Custom search and sort implementation
 
 
 0.1.2 (2013-02-07)

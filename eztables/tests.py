@@ -15,8 +15,10 @@ from eztables.demo.models import Browser, Engine
 from eztables.demo.views import (
     BrowserDatatablesView,
     FormattedBrowserDatatablesView,
+    CustomBrowserDatatablesView,
     ObjectBrowserDatatablesView,
     FormattedObjectBrowserDatatablesView,
+    CustomObjectBrowserDatatablesView,
 )
 
 
@@ -392,6 +394,20 @@ class DatatablesTestMixin(object):
         for idx, row in enumerate(data['aaData']):
             self.assertEqual(self.value(row, NAME), expected[idx])
 
+    def test_sorted_custom_implementation(self):
+        '''Should handle sorting with a custom implementation'''
+        for i in xrange(5):
+            BrowserFactory(name='Browser %s' % i, version='%s' % (5 - i))
+
+        response = self.get_response('custom-browsers', self.build_query(iSortCol_0=1, sSortDir_0='desc'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+        data = json.loads(response.content)
+        for idx, row in enumerate(data['aaData']):
+            field_value = self.value(row, NAME)
+            self.assertEqual(field_value, 'Browser %s' % idx)
+
     def test_global_search_single_term(self):
         '''Should do a global search on a single term'''
         for _ in xrange(2):
@@ -500,6 +516,7 @@ class ArrayMixin(object):
     urls = patterns('',
         url(r'^$', BrowserDatatablesView.as_view(), name='browsers'),
         url(r'^formatted/$', FormattedBrowserDatatablesView.as_view(), name='formatted-browsers'),
+        url(r'^custom/$', CustomBrowserDatatablesView.as_view(), name='custom-browsers'),
     )
 
     def value(self, row, field_id):
@@ -514,6 +531,7 @@ class ObjectMixin(object):
     urls = patterns('',
         url(r'^$', ObjectBrowserDatatablesView.as_view(), name='browsers'),
         url(r'^formatted/$', FormattedObjectBrowserDatatablesView.as_view(), name='formatted-browsers'),
+        url(r'^custom/$', CustomObjectBrowserDatatablesView.as_view(), name='custom-browsers'),
     )
 
     id_to_name = {
