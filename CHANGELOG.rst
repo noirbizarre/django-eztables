@@ -4,7 +4,7 @@ Changelog
 Current
 -------
 
-- nothing yet
+- Fix requirements packaging
 
 
 0.1 (2013-02-07)

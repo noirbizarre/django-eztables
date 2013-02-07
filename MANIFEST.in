@@ -1,2 +1,3 @@
 include README.rst CHANGELOG.rst LICENSE MANIFEST.in
 recursive-include  eztables *.html *.js *.css, *.json, *.png
+recursive-include  requirements *.pip
