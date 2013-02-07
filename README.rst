@@ -5,7 +5,7 @@ Django ezTables
 .. image:: https://secure.travis-ci.org/noirbizarre/django-eztables.png
    :target: http://travis-ci.org/noirbizarre/django-eztables
 
-jQuery Datatables integration for Django.
+Easy integration between jQuery DataTables and Django.
 
 Compatibility
 =============
