@@ -72,7 +72,11 @@ class DatatablesView(MultipleObjectMixin, View):
             direction = '-' if field_dir == DESC else ''
             if hasattr(self, 'sort_col_%s' % field_idx):
                 method = getattr(self, 'sort_col_%s' % field_idx)
-                orders.append(method(direction))
+                result = method(direction)
+                if isinstance(result, str):
+                    orders.append(result)
+                else:
+                    orders.extend(result)
             else:
                 field = self.get_field(field_idx)
                 if RE_FORMATTED.match(field):

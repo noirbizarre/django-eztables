@@ -408,6 +408,20 @@ class DatatablesTestMixin(object):
             field_value = self.value(row, NAME)
             self.assertEqual(field_value, 'Browser %s' % idx)
 
+    def test_sorted_custom_implementation_many_fields(self):
+        '''Should handle sorting with a custom implementation on many fields'''
+        for i in xrange(5):
+            BrowserFactory(name='Browser %s' % i, platform='%s' % (5 - i))
+
+        response = self.get_response('custom-browsers', self.build_query(iSortCol_0=2, sSortDir_0='asc'))
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+        data = json.loads(response.content)
+        for idx, row in enumerate(data['aaData']):
+            field_value = self.value(row, NAME)
+            self.assertEqual(field_value, 'Browser %s' % idx)
+
     def test_global_search_single_term(self):
         '''Should do a global search on a single term'''
         for _ in xrange(2):

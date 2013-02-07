@@ -152,7 +152,7 @@ Custom sort
 You can implement a custom sort method.
 It have to be named ``sort_col_X`` where ``X`` should be the index given by the datatables request (correspond to the filtered column).
 
-It take the requested direction (``''`` or ``'-'``) as parameter and should return a `Django order statement <https://docs.djangoproject.com/en/dev/ref/models/querysets/#order-by>`_.
+It take the requested direction (``''`` or ``'-'``) as parameter and should return one or more `Django order statement <https://docs.djangoproject.com/en/dev/ref/models/querysets/#order-by>`_.
 
 .. code-block:: python
 
@@ -161,6 +161,10 @@ It take the requested direction (``''`` or ``'-'``) as parameter and should retu
         def sort_col_1(self, direction):
             '''Sort on version instead of name'''
             return '%sversion' % direction
+
+        def sort_col_2(self, direction):
+            '''Sort on name and platform instead of platform'''
+            return ('%sname' % direction, '%splatform' % direction)
 
 Custom search
 -------------

@@ -91,6 +91,10 @@ class CustomSearchSort(object):
         '''Sort on version instead of name'''
         return '%sversion' % direction
 
+    def sort_col_2(self, direction):
+        '''Sort on name and platform instead of platform'''
+        return ('%sname' % direction, '%splatform' % direction)
+
     def search_col_1(self, search, queryset):
         '''Search on version instead of name'''
         return queryset.filter(version__icontains=search)
