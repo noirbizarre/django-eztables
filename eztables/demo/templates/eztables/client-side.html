@@ -34,12 +34,8 @@
 </div>
 
 <div class="row">
-    <p>This table use the Twitter Bootstrap integration: <span class="label label-warning">TODO</span></p>
-    <pre class="django">{% templatetag openblock %} load js eztables {% templatetag closeblock %}
-{% templatetag opencomment %} DataTables Bootstrap style {% templatetag closecomment %}
-{% templatetag openblock %} css "css/datatables.bootstrap.css" {% templatetag closeblock %}
-{% templatetag opencomment %} DataTables Bootstrap code {% templatetag closecomment %}
-{% templatetag openblock %} datatables_bootstrap_js {% templatetag closeblock %}</pre>
+    <p>This table use the Twitter Bootstrap integration:</p>
+    <pre data-url="{% static "snippets/bootstrap.html" %}" class="django" />
 </div>
 
 <div class="row">
