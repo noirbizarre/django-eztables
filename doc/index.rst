@@ -1,11 +1,12 @@
-===============
-Django ezTables
-===============
+.. Django ezTables documentation master file, created by
+   sphinx-quickstart on Thu Feb  7 11:49:04 2013.
+   You can adapt this file completely to your liking, but it should at least
+   contain the root `toctree` directive.
 
-.. image:: https://secure.travis-ci.org/noirbizarre/django-eztables.png
-   :target: http://travis-ci.org/noirbizarre/django-eztables
+Welcome to Django ezTables's documentation!
+===========================================
 
-jQuery Datatables integration for Django.
+Django ezTables provides easy integration between `jQuery DataTables <http://datatables.net>`_ and `Django <http://www.djangoproject.com>`_.
 
 Compatibility
 =============
@@ -58,7 +59,25 @@ You can try the demo by cloning this repository and running the test server with
 Then open your browser to http://localhost:8000
 
 
+
 Documentation
 =============
 
-The documentation is hosted `on Read the Docs <http://django-eztables.readthedocs.org/en/latest/>`_
+.. toctree::
+    :maxdepth: 2
+
+    templatetags
+    serverside
+    localization
+    api
+    changelog
+
+
+
+Indices and tables
+==================
+
+* :ref:`genindex`
+* :ref:`modindex`
+* :ref:`search`
+
