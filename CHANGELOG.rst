@@ -4,7 +4,7 @@ Changelog
 Current
 -------
 
-- nothing yet
+- Fix static files packaging
 
 
 0.1.1 (2013-02-07)
