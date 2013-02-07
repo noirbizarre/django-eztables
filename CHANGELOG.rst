@@ -4,7 +4,8 @@ Changelog
 Current
 -------
 
-- Custom search and sort implementation
+- Handle custom server-side search implementation
+- Handle custom server-side sort implementation
 
 
 0.1.2 (2013-02-07)
