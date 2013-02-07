@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Current
--------
+0.1.2 (2013-02-07)
+------------------
 
 - Fix static files packaging
 
