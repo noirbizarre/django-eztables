@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Current
--------
+0.1.1 (2013-02-07)
+------------------
 
 - Fix requirements packaging
 
