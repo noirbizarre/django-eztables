@@ -4,7 +4,7 @@ Changelog
 Current
 -------
 
-- nothing yet
+- Fix formatting with unicode
 
 
 0.2 (2013-02-07)
