@@ -61,4 +61,4 @@ Then open your browser to http://localhost:8000
 Documentation
 =============
 
-The documentation is hosted `on Read the Docs <http://django-eztables.readthedocs.org/en/0.2.1/>`_
+The documentation is hosted `on Read the Docs <http://django-eztables.readthedocs.org/en/latest/>`_
