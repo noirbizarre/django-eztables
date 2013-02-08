@@ -322,6 +322,18 @@ class DatatablesTestMixin(object):
         for row in data['aaData']:
             self.assertInstance(row)
 
+    def test_unicode(self):
+        '''Should handle unicode special caracters'''
+        BrowserFactory(name=u'é€ç')
+
+        response = self.get_response('formatted-browsers', self.build_query())
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(response['Content-Type'], 'application/json')
+
+        data = json.loads(response.content)
+        self.assertEqual(len(data['aaData']), 1)
+        self.assertInstance(data['aaData'][0])
+
     def test_sorted_single_field(self):
         '''Should handle sorting on a single field'''
         for i in xrange(5):

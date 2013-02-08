@@ -147,13 +147,14 @@ class DatatablesView(MultipleObjectMixin, View):
 
     def get_row(self, row):
         '''Format a single row (if necessary)'''
+
         if isinstance(self.fields, dict):
             return dict([
-                (key, value.format(**row) if RE_FORMATTED.match(value) else row[value])
+                (key, unicode(value).format(**row) if RE_FORMATTED.match(value) else row[value])
                 for key, value in self.fields.items()
             ])
         else:
-            return [field.format(**row) if RE_FORMATTED.match(field) else row[field] for field in self.fields]
+            return [unicode(field).format(**row) if RE_FORMATTED.match(field) else row[field] for field in self.fields]
 
     def render_to_response(self, form, **kwargs):
         '''Render Datatables expected JSON format'''
