@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Current
--------
+0.2.1 (2013-02-08)
+------------------
 
 - Fix formatting with unicode
 
