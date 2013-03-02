@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Current
--------
+0.2.2 (2013-03-02)
+------------------
 
 - Django 1.5 compatibility
 - Added custom search and sort demo
