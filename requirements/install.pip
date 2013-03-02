@@ -1,2 +1,2 @@
 django>=1.4
-django.js>=0.5
+django.js>=0.6.2

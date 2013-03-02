@@ -4,7 +4,7 @@ Changelog
 Current
 -------
 
-- nothing yet
+- Django 1.5 compatibility
 
 
 0.2.1 (2013-02-08)

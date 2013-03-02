@@ -1,5 +1,6 @@
 {% extends "eztables/base.html" %}
 {% load js %}
+{% load url from future %}
 
 {% block server-side %}active{% endblock %}
 
@@ -13,16 +14,16 @@
             <div class="container">
                 <ul class="nav">
                     <li class="{% block server-side-base %}{% endblock %}">
-                        <a href="{% url server-side %}">Base processing</a>
+                        <a href="{% url "server-side" %}">Base processing</a>
                     </li>
                     <li class="{% block server-side-search %}{% endblock %}">
-                        <a href="{% url server-side-search %}">Search modes</a>
+                        <a href="{% url "server-side-search" %}">Search modes</a>
                     </li>
                     <li class="{% block server-side-objects %}{% endblock %}">
-                        <a href="{% url server-side-objects %}">Using objects</a>
+                        <a href="{% url "server-side-objects" %}">Using objects</a>
                     </li>
                     <li class="{% block server-side-custom %}{% endblock %}">
-                        <a href="{% url server-side-custom %}">Custom variables</a>
+                        <a href="{% url "server-side-custom" %}">Custom variables</a>
                     </li>
                 </ul>
             </div>
