@@ -14,6 +14,7 @@
             <tr>
                 <th>Rendering Engine</th>
                 <th>Browser</th>
+                <th>Version</th>
                 <th>Platform(s)</th>
                 <th>Engine version</th>
                 <th>CSS Grade</th>
@@ -23,7 +24,8 @@
         {% for browser in browsers %}
         <tr>
             <td>{{ browser.engine.name }}</td>
-            <td>{{ browser.name }} {{ browser.version }}</td>
+            <td>{{ browser.name }}</td>
+            <td>{{ browser.version }}</td>
             <td>{{ browser.platform }}</td>
             <td class="center">{{ browser.engine.version|default:"-" }}</td>
             <td class="center">{{ browser.engine.css_grade }}</td>

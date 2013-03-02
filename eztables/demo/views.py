@@ -46,6 +46,7 @@ class BrowserDatatablesView(DatatablesView):
     fields = (
         'engine__name',
         'name',
+        'version',
         'platform',
         'engine__version',
         'engine__css_grade',
@@ -57,6 +58,7 @@ class FormattedBrowserDatatablesView(DatatablesView):
     fields = (
         'engine__name',
         '{name} {version}',
+        'version',
         'platform',
         'engine__version',
         'engine__css_grade',
@@ -68,6 +70,7 @@ class ObjectBrowserDatatablesView(DatatablesView):
     fields = {
         'name': 'name',
         'engine': 'engine__name',
+        'version': 'version',
         'platform': 'platform',
         'engine_version': 'engine__version',
         'css_grade': 'engine__css_grade',
@@ -78,6 +81,7 @@ class FormattedObjectBrowserDatatablesView(DatatablesView):
     model = Browser
     fields = {
         'name': '{name} {version}',
+        'version': 'version',
         'engine': 'engine__name',
         'platform': 'platform',
         'engine_version': 'engine__version',
@@ -91,7 +95,7 @@ class CustomSearchSort(object):
         '''Sort on version instead of name'''
         return '%sversion' % direction
 
-    def sort_col_2(self, direction):
+    def sort_col_3(self, direction):
         '''Sort on name and platform instead of platform'''
         return ('%sname' % direction, '%splatform' % direction)
 

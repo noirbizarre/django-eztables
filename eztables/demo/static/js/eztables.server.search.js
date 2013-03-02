@@ -39,7 +39,7 @@
         $("#global-filter").keyup( fnFilterGlobal );
         $("#global-regex").click( fnFilterGlobal );
 
-        for (var i=0; i<5; i++) {
+        for (var i=0; i<6; i++) {
             $("#filter-"+i).keyup(createFilter(i));
             $("#regex-"+i).click(createFilter(i));
         }

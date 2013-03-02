@@ -5,9 +5,10 @@
     var Column = {
         ENGINE: 0,
         BROWSER: 1,
-        PLATFORM: 2,
-        ENGINE_VERSION: 3,
-        GRADE: 4
+        VERSION: 2,
+        PLATFORM: 3,
+        ENGINE_VERSION: 4,
+        GRADE: 5
     };
 
     var Demo = window.Demo = {

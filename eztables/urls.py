@@ -11,6 +11,7 @@ from eztables.demo.views import (
     LocalizationView,
     FormattedBrowserDatatablesView,
     ObjectBrowserDatatablesView,
+    CustomBrowserDatatablesView,
 )
 
 # Uncomment the next two lines to enable the admin:
@@ -31,6 +32,7 @@ urlpatterns = patterns('',
     url(r'^browsers/', include(patterns('',
         url(r'^default$', FormattedBrowserDatatablesView.as_view(), name='DT-browsers-default'),
         url(r'^objects$', ObjectBrowserDatatablesView.as_view(), name='DT-browsers-objects'),
+        url(r'^custom$', CustomBrowserDatatablesView.as_view(), name='DT-browsers-custom'),
     ))),
     url(r'^js/', include('djangojs.urls')),
 

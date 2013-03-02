@@ -6,7 +6,58 @@
 {% block server-side-container %}
 
 <div class="row">
-    <span class="label label-warning">TODO</span>
+    <p>
+        This page demonstrate the server-side search and sort behavior:
+        <ul>
+            <li>Sorting on name column perform a sort on version instead</li>
+            <li>Sorting on platform column perform a sort name and platform instead</li>
+            <li>Searching on name column perform a search on version instead</li>
+        </ul>
+    </p>
+</div>
+
+<div class="row">
+    <table id="browser-table" class="span12 display table table-bordered table-condensed table-striped">
+        <thead>
+            <tr>
+                <th>Rendering Engine</th>
+                <th>Browser</th>
+                <th>Version</th>
+                <th>Platform(s)</th>
+                <th>Engine version</th>
+                <th>CSS Grade</th>
+            </tr>
+        </thead>
+        <tbody></tbody>
+        <tfoot>
+            <tr>
+                <td>
+                    <input id="filter-0" type="text" class="fill"
+                        placeholder=" Rendering engine search">
+                </td>
+                <td>
+                    <input id="filter-1" type="text" class="fill"
+                        placeholder=" Browser search">
+                </td>
+                <td>
+                    <input id="filter-2" type="text" class="fill"
+                        placeholder=" Version search">
+                </td>
+                <td>
+                    <input id="filter-3" type="text" class="fill"
+                        placeholder=" Platform search">
+                </td>
+                <td>
+                    <input id="filter-4" type="text" class="fill"
+                        placeholder=" Engine version search">
+                </td>
+                <td>
+                    <input id="filter-5" type="text" class="fill"
+                        placeholder=" CSS grade search">
+                </td>
+            </tr>
+        </tfoot>
+    </table>
 </div>
 
 {% endblock %}

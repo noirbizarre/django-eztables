@@ -192,7 +192,7 @@ class FormattedFieldRegexTest(unittest.TestCase):
             self.assertEqual(matches[i], 'nested__field_%s' % i)
 
 
-ENGINE_NAME, NAME, PLATFORM, ENGINE_VERSION, ENGINE_CSS_GRADE = range(5)
+ENGINE_NAME, NAME, VERSION, PLATFORM, ENGINE_VERSION, ENGINE_CSS_GRADE = range(6)
 
 
 class DatatablesTestMixin(object):
@@ -425,7 +425,7 @@ class DatatablesTestMixin(object):
         for i in xrange(5):
             BrowserFactory(name='Browser %s' % i, platform='%s' % (5 - i))
 
-        response = self.get_response('custom-browsers', self.build_query(iSortCol_0=2, sSortDir_0='asc'))
+        response = self.get_response('custom-browsers', self.build_query(iSortCol_0=3, sSortDir_0='asc'))
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
@@ -569,7 +569,7 @@ class ArrayMixin(object):
 
     def assertInstance(self, row):
         self.assertTrue(isinstance(row, list))
-        self.assertEqual(len(row), 5)
+        self.assertEqual(len(row), 6)
 
 
 class ObjectMixin(object):
@@ -583,7 +583,8 @@ class ObjectMixin(object):
         0: 'engine',
         1: 'name',
         2: 'platform',
-        3: 'engine_version',
+        3: 'version',
+        4: 'engine_version',
         5: 'css_grade',
     }
 

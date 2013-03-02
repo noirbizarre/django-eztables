@@ -96,3 +96,14 @@ pre {
   background: #002b36;
   color: #839496;
 }
+
+.table tfoot td {
+  padding: 0;
+  margin: 0;
+}
+
+input.fill {
+  width: 99%;
+  margin: 0;
+  padding: 0;
+}
