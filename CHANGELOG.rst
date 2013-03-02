@@ -5,6 +5,7 @@ Current
 -------
 
 - Django 1.5 compatibility
+- Added custom search and sort demo
 
 
 0.2.1 (2013-02-08)
