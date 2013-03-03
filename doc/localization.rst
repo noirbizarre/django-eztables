@@ -4,7 +4,7 @@ Localization
 
 Django ezTable embed DataTables localizations.
 
-Thay have the following naming convention::
+They have the following naming convention::
 
     {{STATIC_URL}}/js/libs/datatables/language.{{LANG}}.json
 
@@ -26,7 +26,7 @@ You can obtain the current language code with django.js_ too:
 
     var code = Django.context.LANGUAGE_CODE;
 
-Be carefull, no localization is provided for English language.
+Be careful, no localization is provided for the English language.
 
 
 .. _django.js: http://pypi.python.org/pypi/django.js
