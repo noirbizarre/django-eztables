@@ -12,7 +12,7 @@ You can either:
 
     {% load eztables %}
 
-- load the template tag lib by adding to your ``views.py``:
+- load the template tag lib by adding it to your ``views.py``:
 
 .. code-block:: python
 

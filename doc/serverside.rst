@@ -118,7 +118,7 @@ You need to use the ``aoColumns`` properties in the DataTables initialization:
 Format patterns
 ---------------
 
-You can optionnaly provide some format patterns in the field definition:
+You can optionally provide some format patterns in the field definition:
 
 .. code-block:: python
 
@@ -152,7 +152,7 @@ Custom sort
 You can implement a custom sort method.
 It have to be named ``sort_col_X`` where ``X`` should be the index given by the datatables request (correspond to the filtered column).
 
-It take the requested direction (``''`` or ``'-'``) as parameter and should return one or more `Django order statement <https://docs.djangoproject.com/en/dev/ref/models/querysets/#order-by>`_.
+It takes the requested direction (``''`` or ``'-'``) as a parameter and should return one or more `Django order statement <https://docs.djangoproject.com/en/dev/ref/models/querysets/#order-by>`_.
 
 .. code-block:: python
 
@@ -170,9 +170,9 @@ Custom search
 -------------
 
 You can implement a custom search method.
-It have to be named ``search_col_X`` where ``X`` should be the index given by the datatables request (correspond to the filtered column).
+It has to be named ``search_col_X`` where ``X`` should be the index given by the datatables request (correspond to the filtered column).
 
-It takes the search term and the queryset to filter as parameter and should return the filtered queryset.
+It takes the search term and the queryset to filter as a parameter and should return the filtered queryset.
 
 .. code-block:: python
 

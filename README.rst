@@ -55,7 +55,7 @@ You can try the demo by cloning this repository and running the test server with
 
     $ python manage.py syncdb
     $ python manage.py loaddata eztables/demo/fixtures/browsers.json
-    $ pyhton manage.py runserver
+    $ python manage.py runserver
 
 Then open your browser to http://localhost:8000
 
