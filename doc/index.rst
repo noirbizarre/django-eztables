@@ -31,7 +31,7 @@ or with easy_install:
     $ easy_install django-eztables
 
 
-Add ``djangojs`` and ``django-eztables`` to your ``settings.INSTALLED_APPS``.
+Add ``djangojs`` and ``eztables`` to your ``settings.INSTALLED_APPS``.
 
 
 Features
