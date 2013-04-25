@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import json
 import random
 import unittest
@@ -7,6 +8,8 @@ from django import forms
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.utils.six import iteritems
+from django.utils.six.moves import xrange
 from factory import Factory, SubFactory, Sequence
 
 from eztables.forms import DatatablesForm
@@ -252,7 +255,7 @@ class DatatablesTestMixin(object):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertTrue('iTotalRecords' in data)
         self.assertEqual(data['iTotalRecords'], 0)
         self.assertTrue('iTotalDisplayRecords' in data)
@@ -270,7 +273,7 @@ class DatatablesTestMixin(object):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertTrue('iTotalRecords' in data)
         self.assertEqual(data['iTotalRecords'], len(browsers))
         self.assertTrue('iTotalDisplayRecords' in data)
@@ -290,7 +293,7 @@ class DatatablesTestMixin(object):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertTrue('iTotalRecords' in data)
         self.assertEqual(data['iTotalRecords'], len(browsers))
         self.assertTrue('iTotalDisplayRecords' in data)
@@ -310,7 +313,7 @@ class DatatablesTestMixin(object):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertTrue('iTotalRecords' in data)
         self.assertEqual(data['iTotalRecords'], len(browsers))
         self.assertTrue('iTotalDisplayRecords' in data)
@@ -324,13 +327,13 @@ class DatatablesTestMixin(object):
 
     def test_unicode(self):
         '''Should handle unicode special caracters'''
-        BrowserFactory(name=u'é€ç')
+        BrowserFactory(name='é€ç')
 
         response = self.get_response('formatted-browsers', self.build_query())
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 1)
         self.assertInstance(data['aaData'][0])
 
@@ -343,7 +346,7 @@ class DatatablesTestMixin(object):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         for idx, row in enumerate(data['aaData']):
             field_value = self.value(row, NAME)
             self.assertEqual(field_value, 'Browser %s' % (4 - idx))
@@ -363,7 +366,7 @@ class DatatablesTestMixin(object):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         expected = (
             ('Browser 4', '8'),
             ('Browser 4', '9'),
@@ -390,7 +393,7 @@ class DatatablesTestMixin(object):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         expected = (
             'Browser 4 9',
             'Browser 4 8',
@@ -415,7 +418,7 @@ class DatatablesTestMixin(object):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         for idx, row in enumerate(data['aaData']):
             field_value = self.value(row, NAME)
             self.assertEqual(field_value, 'Browser %s' % idx)
@@ -429,7 +432,7 @@ class DatatablesTestMixin(object):
         self.assertEqual(response.status_code, 200)
         self.assertEqual(response['Content-Type'], 'application/json')
 
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         for idx, row in enumerate(data['aaData']):
             field_value = self.value(row, NAME)
             self.assertEqual(field_value, 'Browser %s' % idx)
@@ -442,13 +445,13 @@ class DatatablesTestMixin(object):
             BrowserFactory(engine__name='engine')
 
         response = self.get_response('browsers', self.build_query(sSearch='test'))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
             self.assertEqual(self.value(row, NAME), 'test')
 
         response = self.get_response('browsers', self.build_query(sSearch='engine'))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 3)
         for row in data['aaData']:
             self.assertEqual(self.value(row, ENGINE_NAME), 'engine')
@@ -463,7 +466,7 @@ class DatatablesTestMixin(object):
             BrowserFactory(name='test', engine__name='engine')
 
         response = self.get_response('browsers', self.build_query(sSearch='test engine'))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 4)
         for row in data['aaData']:
             self.assertEqual(self.value(row, ENGINE_NAME), 'engine')
@@ -477,7 +480,7 @@ class DatatablesTestMixin(object):
             BrowserFactory(name='test')
 
         response = self.get_response('browsers', self.build_query(sSearch='[tes]{4}', bRegex=True))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
             self.assertEqual(self.value(row, NAME), 'test')
@@ -490,7 +493,7 @@ class DatatablesTestMixin(object):
             BrowserFactory(name='test')
 
         response = self.get_response('browsers', self.build_query(sSearch_1='tes'))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
             self.assertEqual(self.value(row, NAME), 'test')
@@ -505,7 +508,7 @@ class DatatablesTestMixin(object):
             BrowserFactory(name='test', engine__name='engine')
 
         response = self.get_response('browsers', self.build_query(sSearch_0='eng', sSearch_1='tes'))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 4)
         for row in data['aaData']:
             self.assertEqual(self.value(row, ENGINE_NAME), 'engine')
@@ -519,7 +522,7 @@ class DatatablesTestMixin(object):
             BrowserFactory(name='test')
 
         response = self.get_response('formatted-browsers', self.build_query(sSearch_1='tes'))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
             self.assertTrue(self.value(row, NAME).startswith('test'))
@@ -532,7 +535,7 @@ class DatatablesTestMixin(object):
             BrowserFactory(name='test')
 
         response = self.get_response('browsers', self.build_query(sSearch_1='[tes]{4}', bRegex_1=True))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 2)
         for row in data['aaData']:
             self.assertEqual(self.value(row, NAME), 'test')
@@ -545,13 +548,13 @@ class DatatablesTestMixin(object):
             BrowserFactory(name='test')
 
         response = self.get_response('custom-browsers', self.build_query(sSearch_1='tes'))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 0)
         for row in data['aaData']:
             self.assertEqual(self.value(row, NAME), 'test')
 
         response = self.get_response('custom-browsers', self.build_query(sSearch_1='1.1'))
-        data = json.loads(response.content)
+        data = json.loads(response.content.decode())
         self.assertEqual(len(data['aaData']), 1)
         for row in data['aaData']:
             self.assertNotEqual(self.value(row, NAME), 'test')
@@ -591,7 +594,7 @@ class ObjectMixin(object):
     def build_query(self, **kwargs):
         query = super(ObjectMixin, self).build_query(**kwargs)
         query.update(dict((
-            ('mDataProp_%s' % k, v) for k, v in self.id_to_name.iteritems()
+            ('mDataProp_%s' % k, v) for k, v in iteritems(self.id_to_name)
         )))
         return query
 

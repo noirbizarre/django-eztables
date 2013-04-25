@@ -50,6 +50,7 @@ setup(
     install_requires=pip('install.pip'),
     tests_require=pip('develop.pip'),
     license='LGPL',
+    use_2to3=True,
     classifiers=[
         "Framework :: Django",
         "Development Status :: 4 - Beta",

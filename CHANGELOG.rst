@@ -4,7 +4,7 @@ Changelog
 Current
 -------
 
-- nothing yet
+- Python 3 support
 
 
 0.2.2 (2013-03-02)

@@ -8,6 +8,7 @@ from django.core.paginator import Paginator
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest
+from django.utils.six.moves import xrange
 from django.views.generic import View
 from django.views.generic.list import MultipleObjectMixin
 
