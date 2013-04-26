@@ -2,4 +2,4 @@
 pep8
 pylint
 coverage
-factory_boy
+factory_boy>=2.0.0

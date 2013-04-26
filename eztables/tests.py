@@ -10,7 +10,7 @@ from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils.six import iteritems
 from django.utils.six.moves import xrange
-from factory import Factory, SubFactory, Sequence
+from factory import DjangoModelFactory, SubFactory, Sequence
 
 from eztables.forms import DatatablesForm
 from eztables.views import RE_FORMATTED
@@ -25,14 +25,14 @@ from eztables.demo.views import (
 )
 
 
-class EngineFactory(Factory):
+class EngineFactory(DjangoModelFactory):
     FACTORY_FOR = Engine
     name = random.choice(('Gecko', 'Webkit', 'Presto'))
     version = Sequence(lambda n: n)
     css_grade = random.choice(('A', 'C', 'X'))
 
 
-class BrowserFactory(Factory):
+class BrowserFactory(DjangoModelFactory):
     FACTORY_FOR = Browser
     name = random.choice(('Firefox', 'Safari', 'Chrome'))
     platform = random.choice(('Windows', 'MacOSX', 'Linux'))
