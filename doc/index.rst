@@ -69,6 +69,7 @@ Documentation
     templatetags
     serverside
     localization
+    integration
     api
     changelog
 
