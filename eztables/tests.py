@@ -354,7 +354,7 @@ class DatatablesTestMixin(object):
     def test_sorted_multiple_field(self):
         '''Should handle sorting on multiple field'''
         for i in xrange(10):
-            BrowserFactory(name='Browser %s' % (i / 2), engine__version='%s' % i)
+            BrowserFactory(name='Browser %s' % (i // 2), engine__version='%s' % i)
 
         response = self.get_response('browsers', self.build_query(
             iSortingCols=2,
@@ -387,7 +387,7 @@ class DatatablesTestMixin(object):
     def test_sorted_formatted(self):
         '''Should handle sorting with formatting'''
         for i in xrange(10):
-            BrowserFactory(name='Browser %s' % (i / 2), version='%s' % i)
+            BrowserFactory(name='Browser %s' % (i // 2), version='%s' % i)
 
         response = self.get_response('formatted-browsers', self.build_query(iSortCol_0=1, sSortDir_0='desc'))
         self.assertEqual(response.status_code, 200)
