@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import unicode_literals
 import json
 import re
 
@@ -8,10 +9,10 @@ from django.core.paginator import Paginator
 from django.core.serializers.json import DjangoJSONEncoder
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest
-from django.utils.six.moves import xrange
+from django.utils.six import text_type
+from django.utils.six.moves import reduce, xrange
 from django.views.generic import View
 from django.views.generic.list import MultipleObjectMixin
-from django.utils.six.moves import reduce
 
 from eztables.forms import DatatablesForm, DESC
 
@@ -75,7 +76,7 @@ class DatatablesView(MultipleObjectMixin, View):
             if hasattr(self, 'sort_col_%s' % field_idx):
                 method = getattr(self, 'sort_col_%s' % field_idx)
                 result = method(direction)
-                if isinstance(result, str):
+                if isinstance(result, (bytes, text_type)):
                     orders.append(result)
                 else:
                     orders.extend(result)
@@ -152,11 +153,11 @@ class DatatablesView(MultipleObjectMixin, View):
 
         if isinstance(self.fields, dict):
             return dict([
-                (key, unicode(value).format(**row) if RE_FORMATTED.match(value) else row[value])
+                (key, text_type(value).format(**row) if RE_FORMATTED.match(value) else row[value])
                 for key, value in self.fields.items()
             ])
         else:
-            return [unicode(field).format(**row) if RE_FORMATTED.match(field) else row[field] for field in self.fields]
+            return [text_type(field).format(**row) if RE_FORMATTED.match(field) else row[field] for field in self.fields]
 
     def render_to_response(self, form, **kwargs):
         '''Render Datatables expected JSON format'''
