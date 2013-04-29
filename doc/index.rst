@@ -11,9 +11,8 @@ Django ezTables provides easy integration between `jQuery DataTables <http://dat
 Compatibility
 =============
 
-Django ezTables requires Python 2.7, Django 1.4+ and Django.js 0.5+.
+Django ezTables requires Python 2.7+, Django 1.4+ and Django.js 0.7+.
 
-For Django 1.5 compatibility, you need at least Django.js 0.6.2.
 
 Installation
 ============
