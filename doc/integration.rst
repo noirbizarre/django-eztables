@@ -17,7 +17,7 @@ First add jQuery, Django.js and jQuery Datatables (and optionnaly bootstrap supp
                 '...',
                 'js/libs/jquery-1.9.1.min.js',
                 'js/djangojs/django.js',
-                'js/libs/datatables/jquery.dataTables.min.js'
+                'js/libs/datatables/jquery.dataTables.js'
                 'js/libs/datatables/datatables.bootstrap.js'
                 '...',
             ),

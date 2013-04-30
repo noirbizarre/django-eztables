@@ -6,6 +6,7 @@ Current
 
 - Python 3 support
 - Documented integration with Django Pipeline or RequireJS
+- Package the unminified version too
 
 
 0.2.2 (2013-03-02)
