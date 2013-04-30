@@ -15,10 +15,10 @@ First add jQuery, Django.js and jQuery Datatables (and optionnaly bootstrap supp
         'base': {
             'source_filenames': (
                 '...',
-                'js/libs/jquery-1.9.1.min.js',
+                'js/libs/jquery-2.0.0.js',
                 'js/djangojs/django.js',
-                'js/libs/datatables/jquery.dataTables.js'
-                'js/libs/datatables/datatables.bootstrap.js'
+                'js/libs/datatables/jquery.dataTables.js',
+                'js/libs/datatables/datatables.bootstrap.js',
                 '...',
             ),
             'output_filename': 'js/base.min.js',
@@ -93,9 +93,10 @@ You should add extras paths and shim configurations for Django.js and Datatables
 
     require.config({
         paths: {
+            'jquery': 'libs/jquery-2.0.0',
             'django': 'djangojs/django',
-            'datatables': 'lib/datatables/js/jquery.dataTables.min',
-            'datatables.bootstrap': 'lib/datatables/js/datatables.bootstrap',
+            'datatables': 'libs/datatables/js/jquery.dataTables.min',
+            'datatables.bootstrap': 'libs/datatables/js/datatables.bootstrap'
         },
 
         shim: {
