@@ -1,8 +1,8 @@
 Changelog
 =========
 
-Current
--------
+0.3.0 (2013-04-30)
+------------------
 
 - Python 3 support
 - Documented integration with Django Pipeline or RequireJS
