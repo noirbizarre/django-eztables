@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 from django import template
+from django.conf import settings
 from djangojs.templatetags.js import js_lib, css
 
 
@@ -8,7 +9,8 @@ register = template.Library()
 
 @register.simple_tag
 def datatables_js():
-    return js_lib('datatables/jquery.dataTables.min.js')
+    suffix = '' if settings.DEBUG else '.min'
+    return js_lib('datatables/jquery.dataTables%s.js' % suffix)
 
 
 @register.simple_tag

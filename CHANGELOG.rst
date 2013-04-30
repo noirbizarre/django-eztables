@@ -6,7 +6,7 @@ Current
 
 - Python 3 support
 - Documented integration with Django Pipeline or RequireJS
-- Package the unminified version too
+- Package the unminified version too (used when ``settings.DEBUG=True``)
 
 
 0.2.2 (2013-03-02)
