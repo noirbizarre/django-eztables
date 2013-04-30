@@ -55,6 +55,7 @@ setup(
         "Framework :: Django",
         "Development Status :: 4 - Beta",
         "Programming Language :: Python",
+        'Programming Language :: Python :: 3',
         "Environment :: Web Environment",
         "Operating System :: OS Independent",
         "Intended Audience :: Developers",
