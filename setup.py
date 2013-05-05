@@ -7,6 +7,26 @@ from setuptools import setup, find_packages
 
 RE_REQUIREMENT = re.compile(r'^\s*-r\s*(?P<filename>.*)$')
 
+PYPI_RST_FILTERS = (
+    # Replace code-blocks
+    (r'\.\.\s? code-block::\s*(\w|\+)+',  '::'),
+    # Remove travis ci badge
+    (r'.*travis-ci\.org/.*', ''),
+)
+
+
+def rst(filename):
+    '''
+    Load rst file and sanitize it for PyPI.
+    Remove unsupported github tags:
+     - code-block directive
+     - travis ci build badge
+    '''
+    content = open(filename).read()
+    for regex, replacement in PYPI_RST_FILTERS:
+        content = re.sub(regex, replacement, content)
+    return content
+
 
 def pip(filename):
     '''Parse pip requirement file and transform it to setuptools requirements'''
@@ -18,16 +38,6 @@ def pip(filename):
         else:
             requirements.append(line)
     return requirements
-
-
-def rst(filename):
-    '''
-    Load rst file and sanitize it for PyPI.
-    Remove unsupported github tags:
-     - code-block directive
-    '''
-    content = open(filename).read()
-    return re.sub(r'\.\.\s? code-block::\s*(\w|\+)+', '::', content)
 
 
 long_description = '\n'.join((
@@ -61,6 +71,7 @@ setup(
         "Intended Audience :: Developers",
         "Topic :: System :: Software Distribution",
         "Programming Language :: Python",
+        "Programming Language :: Python 3",
         "Topic :: Software Development :: Libraries :: Python Modules",
         'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
     ],
