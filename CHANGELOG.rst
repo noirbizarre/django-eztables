@@ -4,7 +4,7 @@ Changelog
 Current
 -------
 
-- nothing yet
+- Prevent errors on regex lookups with SQLite (`issue #5 <https://github.com/noirbizarre/django-eztables/issues/5>`_)
 
 
 0.3.0 (2013-04-30)

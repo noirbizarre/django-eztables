@@ -7,6 +7,7 @@ from operator import or_
 
 from django.core.paginator import Paginator
 from django.core.serializers.json import DjangoJSONEncoder
+from django.db import models
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponseBadRequest
 from django.utils.six import text_type
@@ -20,6 +21,31 @@ from eztables.forms import DatatablesForm, DESC
 JSON_MIMETYPE = 'application/json'
 
 RE_FORMATTED = re.compile(r'\{(\w+)\}')
+
+#: SQLite unsupported field types for regex lookups
+UNSUPPORTED_REGEX_FIELDS = (
+    models.IntegerField,
+    models.BooleanField,
+    models.NullBooleanField,
+    models.FloatField,
+    models.DecimalField,
+)
+
+
+def get_real_field(model, field_name):
+    '''
+    Get the real field from a model given its name.
+
+    Handle nested models (aka. ``__`` lookups)
+    '''
+    parts = field_name.split('__')
+    field = model._meta.get_field(parts[0])
+    if len(parts) == 1:
+        return model._meta.get_field(field_name)
+    elif isinstance(field, models.ForeignKey):
+        return get_real_field(field.rel.to, '__'.join(parts[1:]))
+    else:
+        raise Exception('Unhandled field: %s' % field_name)
 
 
 class DatatablesView(MultipleObjectMixin, View):
@@ -66,6 +92,14 @@ class DatatablesView(MultipleObjectMixin, View):
         else:
             return self.fields[index]
 
+    def can_regex(self, field):
+        '''Test if a given field supports regex lookups'''
+        from django.conf import settings
+        if settings.DATABASES['default']['ENGINE'].endswith('sqlite3'):
+            return not isinstance(get_real_field(self.model, field), UNSUPPORTED_REGEX_FIELDS)
+        else:
+            return True
+
     def get_orders(self):
         '''Get ordering fields for ``QuerySet.order_by``'''
         orders = []
@@ -94,9 +128,10 @@ class DatatablesView(MultipleObjectMixin, View):
         search = self.dt_data['sSearch']
         if search:
             if self.dt_data['bRegex']:
-                criterions = (Q(**{'%s__iregex' % field: search}) for field in self.get_db_fields())
-                search = reduce(or_, criterions)
-                queryset = queryset.filter(search)
+                criterions = [Q(**{'%s__iregex' % field: search}) for field in self.get_db_fields() if self.can_regex(field)]
+                if len(criterions) > 0:
+                    search = reduce(or_, criterions)
+                    queryset = queryset.filter(search)
             else:
                 for term in search.split():
                     criterions = (Q(**{'%s__icontains' % field: term}) for field in self.get_db_fields())
@@ -116,9 +151,10 @@ class DatatablesView(MultipleObjectMixin, View):
                     field = self.get_field(idx)
                     fields = RE_FORMATTED.findall(field) if RE_FORMATTED.match(field) else [field]
                     if self.dt_data['bRegex_%s' % idx]:
-                        criterions = (Q(**{'%s__iregex' % field: search}) for field in fields)
-                        search = reduce(or_, criterions)
-                        queryset = queryset.filter(search)
+                        criterions = [Q(**{'%s__iregex' % field: search}) for field in fields if self.can_regex(field)]
+                        if len(criterions) > 0:
+                            search = reduce(or_, criterions)
+                            queryset = queryset.filter(search)
                     else:
                         for term in search.split():
                             criterions = (Q(**{'%s__icontains' % field: term}) for field in fields)

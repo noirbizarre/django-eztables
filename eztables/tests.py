@@ -14,7 +14,7 @@ from factory import DjangoModelFactory, SubFactory, Sequence
 
 from eztables.forms import DatatablesForm
 from eztables.views import RE_FORMATTED
-from eztables.demo.models import Browser, Engine
+from eztables.demo.models import Browser, Engine, SpecialCase
 from eztables.demo.views import (
     BrowserDatatablesView,
     FormattedBrowserDatatablesView,
@@ -22,6 +22,7 @@ from eztables.demo.views import (
     ObjectBrowserDatatablesView,
     FormattedObjectBrowserDatatablesView,
     CustomObjectBrowserDatatablesView,
+    SpecialCaseDatatablesView,
 )
 
 
@@ -38,6 +39,22 @@ class BrowserFactory(DjangoModelFactory):
     platform = random.choice(('Windows', 'MacOSX', 'Linux'))
     version = Sequence(lambda n: n)
     engine = SubFactory(EngineFactory)
+
+
+class SpecialCaseFactory(DjangoModelFactory):
+    FACTORY_FOR = SpecialCase
+
+UNSUPPORTED_LOOKUP_FIELDS = (
+    'big_integer_field',
+    'boolean_field',
+    'decimal_field',
+    'float_field',
+    'integer_field',
+    'null_boolean_field',
+    'positive_integer_field',
+    'positive_small_integer_field',
+    'small_integer_field',
+)
 
 
 class DatatablesFormTest(unittest.TestCase):
@@ -246,6 +263,30 @@ class DatatablesTestMixin(object):
             'iSortCol_0': '0',
             'sSortDir_0': 'asc',
         }
+        query.update(kwargs)
+        return query
+
+    def build_query_special(self, **kwargs):
+        query = {
+            'sEcho': '1',
+            'iColumns': len(SpecialCaseDatatablesView.fields),
+            'iDisplayStart': '0',
+            'iDisplayLength': '10',
+            'sSearch': '',
+            'bRegex': 'false',
+            'iSortingCols': '1',
+            'iSortCol_0': '0',
+            'sSortDir_0': 'asc',
+        }
+
+        for idx, field in enumerate(SpecialCaseDatatablesView.fields):
+            query.update({
+                'mDataProp_%s' % idx: '%s' % idx,
+                'sSearch_%s' % idx: '',
+                'bRegex_%s' % idx: 'false',
+                'bSearchable_%s' % idx: 'true',
+                'bSortable_%s' % idx: 'true',
+            })
         query.update(kwargs)
         return query
 
@@ -559,12 +600,33 @@ class DatatablesTestMixin(object):
         for row in data['aaData']:
             self.assertNotEqual(self.value(row, NAME), 'test')
 
+    def test_global_search_regex_unsupported_fields(self):
+        '''Should not fail performing global regex search with unsupported fields'''
+        for _ in range(3):
+            SpecialCaseFactory()
+
+        response = self.get_response('special', self.build_query_special(sSearch='^a$', bRegex=True))
+        data = json.loads(response.content.decode())
+        self.assertEqual(len(data['aaData']), 0)
+
+    def test_column_search_regex_unsupported_fields(self):
+        '''Should not fail performing regex search on unsupported column field'''
+        for _ in range(3):
+            SpecialCaseFactory()
+
+        for idx, field in enumerate(SpecialCaseDatatablesView.fields):
+            params = {'sSearch_%s' % idx: '^a$', 'bRegex_%s' % idx: True}
+            response = self.get_response('special', self.build_query_special(**params))
+            data = json.loads(response.content.decode())
+            self.assertEqual(len(data['aaData']), 3 if field in UNSUPPORTED_LOOKUP_FIELDS else 0)
+
 
 class ArrayMixin(object):
     urls = patterns('',
         url(r'^$', BrowserDatatablesView.as_view(), name='browsers'),
         url(r'^formatted/$', FormattedBrowserDatatablesView.as_view(), name='formatted-browsers'),
         url(r'^custom/$', CustomBrowserDatatablesView.as_view(), name='custom-browsers'),
+        url(r'^special/$', SpecialCaseDatatablesView.as_view(), name='special'),
     )
 
     def value(self, row, field_id):
@@ -580,6 +642,7 @@ class ObjectMixin(object):
         url(r'^$', ObjectBrowserDatatablesView.as_view(), name='browsers'),
         url(r'^formatted/$', FormattedObjectBrowserDatatablesView.as_view(), name='formatted-browsers'),
         url(r'^custom/$', CustomObjectBrowserDatatablesView.as_view(), name='custom-browsers'),
+        url(r'^special/$', SpecialCaseDatatablesView.as_view(), name='special'),
     )
 
     id_to_name = {

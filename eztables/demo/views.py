@@ -2,7 +2,7 @@
 from django.views.generic import TemplateView, ListView
 
 from eztables.views import DatatablesView
-from eztables.demo.models import Browser
+from eztables.demo.models import Browser, SpecialCase
 
 
 class IndexView(TemplateView):
@@ -110,3 +110,34 @@ class CustomBrowserDatatablesView(CustomSearchSort, BrowserDatatablesView):
 
 class CustomObjectBrowserDatatablesView(CustomSearchSort, ObjectBrowserDatatablesView):
     pass
+
+
+class SpecialCaseDatatablesView(DatatablesView):
+    model = SpecialCase
+    fields = (
+        'big_integer_field',
+        'boolean_field',
+        'char_field',
+        'comma_separated_integer_field',
+        'date_field',
+        'datetime_field',
+        'decimal_field',
+        'email_field',
+        'email_field',
+        'file_field',
+        'file_path_field',
+        'float_field',
+        'generic_ip_address_field',
+        'image_field',
+        'integer_field',
+        'ip_address_field',
+        'null_boolean_field',
+        'positive_integer_field',
+        'positive_small_integer_field',
+        'slug_field',
+        'small_integer_field',
+        'text_field',
+        'text_field',
+        'time_field',
+        'url_field',
+    )

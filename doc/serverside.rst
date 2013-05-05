@@ -181,3 +181,21 @@ It takes the search term and the queryset to filter as a parameter and should re
         def search_col_1(self, search, queryset):
             '''Search on version instead of name'''
             return queryset.filter(version__icontains=search)
+
+
+SQLite Warnings
+---------------
+
+Be carefull some field types are not compatible with regex search on SQLite and will be ignored (filtering will no performed on this fields).
+
+Ignored fields type are:
+
+- BigIntegerField
+- BooleanField
+- DecimalField
+- FloatField
+- IntegerField
+- NullBooleanField
+- PositiveIntegerField
+- PositiveSmallIntegerField
+- SmallIntegerField
