@@ -14,5 +14,5 @@ matrix:
             env: DJANGO='django>=1.4,<1.5'
 install:
   - pip install $DJANGO --use-mirrors
-  - pip install -r requirements/develop.pip --use-mirrors
+  - pip install -r requirements/test.pip --use-mirrors
 script: python manage.py test eztables

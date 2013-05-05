@@ -1,0 +1,2 @@
+factory_boy>=2.0.0
+pillow>=2.0.0

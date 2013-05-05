@@ -1,5 +1,5 @@
 -r install.pip
+-r test.pip
 pep8
 pylint
 coverage
-factory_boy>=2.0.0

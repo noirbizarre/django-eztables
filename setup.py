@@ -48,7 +48,7 @@ setup(
     packages=find_packages(),
     include_package_data=True,
     install_requires=pip('install.pip'),
-    tests_require=pip('develop.pip'),
+    tests_require=pip('test.pip'),
     license='LGPL',
     use_2to3=True,
     classifiers=[
