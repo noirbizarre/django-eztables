@@ -36,7 +36,7 @@ def get_real_field(model, field_name):
     '''
     Get the real field from a model given its name.
 
-    Handle nested models (aka. ``__`` lookups)
+    Handle nested models recursively (aka. ``__`` lookups)
     '''
     parts = field_name.split('__')
     field = model._meta.get_field(parts[0])
@@ -193,7 +193,9 @@ class DatatablesView(MultipleObjectMixin, View):
                 for key, value in self.fields.items()
             ])
         else:
-            return [text_type(field).format(**row) if RE_FORMATTED.match(field) else row[field] for field in self.fields]
+            return [text_type(field).format(**row) if RE_FORMATTED.match(field)
+                    else row[field]
+                    for field in self.fields]
 
     def render_to_response(self, form, **kwargs):
         '''Render Datatables expected JSON format'''

@@ -4,7 +4,7 @@ Changelog
 Current
 -------
 
-- nothing yet
+- Python 2.6 support
 
 
 0.3.1 (2013-05-05)

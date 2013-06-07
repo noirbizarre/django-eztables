@@ -2,12 +2,13 @@
 from __future__ import unicode_literals
 import json
 import random
-import unittest
 
 from django import forms
 from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
 from django.test import TestCase
+from django.utils import unittest
+
 from django.utils.six import iteritems
 from django.utils.six.moves import xrange
 from factory import DjangoModelFactory, SubFactory, Sequence
