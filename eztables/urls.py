@@ -12,7 +12,7 @@ from eztables.demo.views import (
     FormattedBrowserDatatablesView,
     ObjectBrowserDatatablesView,
     CustomBrowserDatatablesView,
-    SpecialCasesDatatablesView,
+    SpecialCaseDatatablesView,
 )
 
 # Uncomment the next two lines to enable the admin:
