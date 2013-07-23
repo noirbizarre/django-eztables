@@ -1,3 +1,4 @@
--r install.pip
+django.js
 -r test.pip
 -r reporting.pip
+python-coveralls
