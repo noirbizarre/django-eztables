@@ -71,6 +71,7 @@ Documentation
     localization
     integration
     api
+    contribute
     changelog
 
 
