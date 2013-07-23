@@ -16,4 +16,8 @@ matrix:
 install:
   - pip install $DJANGO django.js --use-mirrors
   - pip install -r requirements/test.pip --use-mirrors
-script: python manage.py test eztables
+  - pip install python-coveralls --use-mirrors
+script:
+  - make coverage pep8
+after_success:
+  - coveralls -c coverage.rc
