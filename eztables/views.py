@@ -128,7 +128,11 @@ class DatatablesView(MultipleObjectMixin, View):
         search = self.dt_data['sSearch']
         if search:
             if self.dt_data['bRegex']:
-                criterions = [Q(**{'%s__iregex' % field: search}) for field in self.get_db_fields() if self.can_regex(field)]
+                criterions = [
+                    Q(**{'%s__iregex' % field: search})
+                    for field in self.get_db_fields()
+                    if self.can_regex(field)
+                ]
                 if len(criterions) > 0:
                     search = reduce(or_, criterions)
                     queryset = queryset.filter(search)

@@ -37,7 +37,7 @@ coverage:
 	@coverage report --rcfile=coverage.rc
 
 pep8:
-	@pep8 $(PACKAGE) --max-line-length=120 --ignore=E128,E122,E125 && echo 'PEP8: OK'
+	@pep8 $(PACKAGE) --max-line-length=120 --ignore=E128,E122,E124,E125 && echo 'PEP8: OK'
 
 pylint:
 	@pylint --rcfile=pylint.rc $(PACKAGE)
