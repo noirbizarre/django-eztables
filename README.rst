@@ -24,18 +24,25 @@ Installation
 
 You can install Django ezTables with pip:
 
-.. code-block:: bash
+.. code-block:: console
 
     $ pip install django-eztables
 
 or with easy_install:
 
-.. code-block:: bash
+.. code-block:: console
 
     $ easy_install django-eztables
 
 
 Add ``djangojs`` and ``eztables`` to your ``settings.INSTALLED_APPS``.
+
+If you want to run the test suite, you will need some additionnal dependencies.
+You can install them in the same time with:
+
+.. code-block:: console
+
+    $ pip install django-eztables[tests]
 
 
 Features
@@ -55,7 +62,7 @@ Demo
 
 You can try the demo by cloning this repository and running the test server with provided data:
 
-.. code-block:: bash
+.. code-block:: console
 
     $ python manage.py syncdb
     $ python manage.py loaddata eztables/demo/fixtures/browsers.json
