@@ -68,6 +68,7 @@ setup(
     },
     license='LGPL',
     use_2to3=True,
+    zip_safe=False,
     classifiers=[
         "Framework :: Django",
         "Development Status :: 4 - Beta",
