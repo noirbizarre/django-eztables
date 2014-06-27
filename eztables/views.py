@@ -215,5 +215,5 @@ class DatatablesView(MultipleObjectMixin, View):
     def json_response(self, data):
         return HttpResponse(
             json.dumps(data, cls=DjangoJSONEncoder),
-            mimetype=JSON_MIMETYPE
+            content_type=JSON_MIMETYPE
         )
