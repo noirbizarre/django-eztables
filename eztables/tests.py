@@ -4,7 +4,6 @@ import json
 import random
 
 from django import forms
-from django.conf.urls import patterns, url
 from django.core.urlresolvers import reverse
 from django.test import TestCase
 from django.utils import unittest
@@ -16,15 +15,7 @@ from factory import DjangoModelFactory, SubFactory, Sequence
 from eztables.forms import DatatablesForm
 from eztables.views import RE_FORMATTED
 from eztables.demo.models import Browser, Engine, SpecialCase
-from eztables.demo.views import (
-    BrowserDatatablesView,
-    FormattedBrowserDatatablesView,
-    CustomBrowserDatatablesView,
-    ObjectBrowserDatatablesView,
-    FormattedObjectBrowserDatatablesView,
-    CustomObjectBrowserDatatablesView,
-    SpecialCaseDatatablesView,
-)
+from eztables.demo.views import SpecialCaseDatatablesView
 
 
 class EngineFactory(DjangoModelFactory):
@@ -623,12 +614,7 @@ class DatatablesTestMixin(object):
 
 
 class ArrayMixin(object):
-    urls = patterns('',
-        url(r'^$', BrowserDatatablesView.as_view(), name='browsers'),
-        url(r'^formatted/$', FormattedBrowserDatatablesView.as_view(), name='formatted-browsers'),
-        url(r'^custom/$', CustomBrowserDatatablesView.as_view(), name='custom-browsers'),
-        url(r'^special/$', SpecialCaseDatatablesView.as_view(), name='special'),
-    )
+    urls = 'eztables.test_array_urls'
 
     def value(self, row, field_id):
         return row[field_id]
@@ -639,12 +625,7 @@ class ArrayMixin(object):
 
 
 class ObjectMixin(object):
-    urls = patterns('',
-        url(r'^$', ObjectBrowserDatatablesView.as_view(), name='browsers'),
-        url(r'^formatted/$', FormattedObjectBrowserDatatablesView.as_view(), name='formatted-browsers'),
-        url(r'^custom/$', CustomObjectBrowserDatatablesView.as_view(), name='custom-browsers'),
-        url(r'^special/$', SpecialCaseDatatablesView.as_view(), name='special'),
-    )
+    urls = 'eztables.test_object_urls'
 
     id_to_name = {
         0: 'engine',
