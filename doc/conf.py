@@ -18,10 +18,8 @@ import sys, os
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 sys.path.insert(0, os.path.abspath('..'))
 
-from django.core.management import setup_environ
-from eztables import settings
-
-setup_environ(settings)
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'eztables.settings')
+from django.conf import settings
 
 # -- General configuration -----------------------------------------------------
 
